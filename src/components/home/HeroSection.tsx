@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useContent } from '../../context/ContentContext';
 import { EditableText } from '../admin/InlineEditor';
-import hero1 from '../../assets/images/hero-1.png';
+import heroActual from '../../assets/images/hero-actual.jpg';
 
 const HeroSection: React.FC = () => {
   const { content } = useContent();
@@ -104,7 +104,7 @@ const HeroSection: React.FC = () => {
         <div className="image-outer-frame">
           <img
             className="hero-main-img"
-            src={hero1}
+            src={heroActual}
             alt="Hero"
             width="1033"
             height="450"
