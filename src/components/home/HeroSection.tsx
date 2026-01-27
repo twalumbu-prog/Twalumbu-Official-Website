@@ -102,7 +102,7 @@ const HeroSection: React.FC = () => {
         transition={{ delay: 2.5, duration: 1.2, ease: "easeOut" }}
       >
         <div className="image-outer-frame">
-          <img
+          <motion.img
             className="hero-main-img"
             src={heroActual}
             alt="Hero"
@@ -110,6 +110,15 @@ const HeroSection: React.FC = () => {
             height="450"
             fetchPriority="high"
             loading="eager"
+            animate={{
+              scale: [1, 1.1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              repeatType: "reverse",
+              ease: "linear"
+            }}
           />
         </div>
       </motion.div>
