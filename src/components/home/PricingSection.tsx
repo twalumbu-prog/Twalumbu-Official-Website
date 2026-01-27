@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CreditCard, Info, ChevronDown, FileText } from 'lucide-react';
 import { useContent } from '../../context/ContentContext';
@@ -149,10 +150,15 @@ const PricingSection: React.FC = () => {
                     />
                   </h3>
 
-                  <button className="requirements-btn">
-                    <span>View Requirements</span>
-                    <FileText size={18} />
-                  </button>
+                  <div className="card-actions">
+                    <button className="requirements-btn">
+                      <span>View Requirements</span>
+                      <FileText size={18} />
+                    </button>
+                    <Link to="/enrol" className="apply-btn-link">
+                      How to Apply?
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -519,6 +525,29 @@ const PricingSection: React.FC = () => {
           color: #422006;
           margin-bottom: 24px;
           text-align: center;
+        }
+
+        .card-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: auto;
+        }
+
+        .apply-btn-link {
+          text-align: center;
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          color: #6B7280;
+          text-decoration: none;
+          transition: color 0.2s;
+          padding: 8px;
+        }
+
+        .apply-btn-link:hover {
+          color: #422006;
+          text-decoration: underline;
         }
 
         .requirements-btn {

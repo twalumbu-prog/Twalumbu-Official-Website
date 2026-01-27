@@ -180,23 +180,23 @@ export const defaultContent: ContentData = {
         schoolFees: [
             {
                 title: "Pre-School & Kindergarten",
-                price: "K4,500",
+                price: "K1,700",
                 period: "per Term",
                 image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
                 features: ["Books & Materials Incl.", "Daily Hot Lunch", "Sports & Arts Activities"]
             },
             {
-                title: "Primary School (G1-G7)",
-                price: "K6,200",
+                title: "Lower Primary (G1-G4)",
+                price: "K1,700",
                 period: "per Term",
                 image: "https://images.unsplash.com/photo-1509062522246-373b1eef7188?q=80&w=800&auto=format&fit=crop",
-                features: ["All Textbooks", "ICT & Science Labs", "Extracurricular Clubs"]
+                features: ["Core Curriculum", "ICT & Science Labs", "Extracurricular Clubs"]
             },
             {
-                title: "Secondary School (G8-G12)",
-                price: "K8,500",
+                title: "Upper Primary (G5-G7)",
+                price: "K1,800 - K2,000",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=800&auto=format&fit=crop",
                 features: ["Zambian & Intl Exams", "Advanced Labs", "Career Counseling"]
             }
         ],
