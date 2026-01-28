@@ -260,15 +260,22 @@ const MarketingSummary: React.FC = () => {
             padding: 36px 24px 60px;
           }
 
-          .stats-grid {
-            flex-direction: column;
-            gap: 48px;
+          .stats-header {
+            align-items: center;
+            text-align: center;
           }
 
           .header-line-1,
           .header-line-2 {
             font-size: 28px;
             line-height: 1.3;
+            text-align: center;
+          }
+
+          .stats-grid {
+            flex-direction: column;
+            gap: 48px;
+            align-items: center;
           }
 
           .stat-number {

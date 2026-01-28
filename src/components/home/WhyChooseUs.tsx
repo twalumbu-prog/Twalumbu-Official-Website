@@ -35,6 +35,11 @@ const WhyChooseUs: React.FC = () => {
     setPage([page + newDirection, newDirection]);
   };
 
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
   const downloadBrochure = (path: string) => {
     console.log(`Downloading brochure from: ${path}`);
     alert("Starting brochure download... (This would be a real PDF download in production)");
@@ -95,6 +100,18 @@ const WhyChooseUs: React.FC = () => {
                       x: { type: "spring", stiffness: 300, damping: 30 },
                       opacity: { duration: 0.2 }
                     }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={1}
+                    onDragEnd={(_, { offset, velocity }) => {
+                      const swipe = swipePower(offset.x, velocity.x);
+
+                      if (swipe < -swipeConfidenceThreshold) {
+                        paginate(1);
+                      } else if (swipe > swipeConfidenceThreshold) {
+                        paginate(-1);
+                      }
+                    }}
                     className="slide-text-content"
                   >
                     <div className="slide-header-vertical">
@@ -125,18 +142,33 @@ const WhyChooseUs: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Navigation Buttons - Fixed at bottom left */}
-              <div className="carousel-nav-wrapper">
-                <button className="nav-circle-btn" onClick={() => paginate(-1)}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.9998 19.9201L8.47984 13.4001C7.70984 12.6301 7.70984 11.3701 8.47984 10.6001L14.9998 4.08008" stroke="white" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <button className="nav-circle-btn" onClick={() => paginate(1)}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.91016 19.9201L15.4302 13.4001C16.2002 12.6301 16.2002 11.3701 15.4302 10.6001L8.91016 4.08008" stroke="white" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
+              {/* Navigation Dots - Swipe Indicator */}
+              <div className="carousel-nav-container">
+                <div className="carousel-nav-wrapper">
+                  <button className="nav-circle-btn" onClick={() => paginate(-1)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14.9998 19.9201L8.47984 13.4001C7.70984 12.6301 7.70984 11.3701 8.47984 10.6001L14.9998 4.08008" stroke="white" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  <button className="nav-circle-btn" onClick={() => paginate(1)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.91016 19.9201L15.4302 13.4001C16.2002 12.6301 16.2002 11.3701 15.4302 10.6001L8.91016 4.08008" stroke="white" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="carousel-dots">
+                  {features.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`dot ${idx === imageIndex ? 'active' : ''}`}
+                      onClick={() => {
+                        const diff = idx - imageIndex;
+                        if (diff !== 0) paginate(diff);
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -421,12 +453,65 @@ const WhyChooseUs: React.FC = () => {
         }
 
         @media (max-width: 600px) {
+          .why-us-carousel-box {
+            padding: 60px 0;
+          }
           .section-title-dark {
             font-size: 32px;
           }
-          .slide-heading {
-            font-size: 26px;
+          .slide-header-vertical {
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
           }
+          .slide-icon-container svg {
+            width: 48px;
+            height: 48px;
+          }
+          .slide-heading {
+            font-size: 24px;
+          }
+          .carousel-nav-wrapper {
+            display: none;
+          }
+          .carousel-dots {
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+          }
+          .slide-text-content {
+            touch-action: pan-y;
+            user-select: none;
+          }
+        }
+
+        .carousel-nav-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          margin-top: 32px;
+        }
+
+        .carousel-dots {
+          display: flex;
+          gap: 12px;
+          justify-content: flex-start;
+        }
+
+        .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.2);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .dot.active {
+          background: #F0AC00;
+          transform: scale(1.3);
+          box-shadow: 0 0 10px rgba(240, 172, 0, 0.4);
         }
       `}</style>
     </section>
