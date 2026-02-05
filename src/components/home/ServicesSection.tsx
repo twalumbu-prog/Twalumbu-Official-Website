@@ -83,7 +83,7 @@ const ServicesSection: React.FC = () => {
           className="services-layout-grid"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-20px" }}
           variants={{
             hidden: { opacity: 0 },
             show: {
@@ -293,8 +293,13 @@ const ServicesSection: React.FC = () => {
 
         /* Responsive state */
         @media (max-width: 1024px) {
+          .services-main-container {
+            gap: 40px;
+          }
+
           .services-row-top {
             flex-direction: column;
+            gap: 24px;
           }
           
           .card-early-childhood, .card-lower-primary {
@@ -303,12 +308,12 @@ const ServicesSection: React.FC = () => {
           }
 
           .new-service-card {
-            height: auto;
-            min-height: 250px;
+            height: 320px;
           }
 
           .card-overlay {
-            background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.9) 100%);
+            background: linear-gradient(to bottom, rgba(42, 20, 9, 0) 0%, rgba(42, 20, 9, 0.8) 100%);
+            padding: 24px;
           }
 
           .card-content-flex {
@@ -318,13 +323,21 @@ const ServicesSection: React.FC = () => {
           }
 
           .card-separator {
-            width: 100%;
-            height: 1px;
+            width: 40px;
+            height: 2px;
+            background: #F0AC00;
           }
           
           .card-title-area {
             flex: none;
             width: 100%;
+            color: white;
+            font-size: 24px;
+          }
+
+          .card-description-area {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
           }
         }
       `}</style>

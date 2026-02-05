@@ -57,20 +57,32 @@ const PricingSection: React.FC = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <button
-              className={`payment-notif-bar ${showHowToPay ? 'active' : ''}`}
-              onClick={() => setShowHowToPay(!showHowToPay)}
-            >
-              <div className="notif-content">
-                <div className="icon-circle">
-                  <Info size={20} />
+            <div className="payment-actions-container">
+              <button
+                className={`payment-notif-bar ${showHowToPay ? 'active' : ''}`}
+                onClick={() => setShowHowToPay(!showHowToPay)}
+              >
+                <div className="notif-content">
+                  <div className="icon-circle">
+                    <Info size={20} />
+                  </div>
+                  <span className="notif-text">How to pay school fees? Click for instructions</span>
                 </div>
-                <span className="notif-text">How to pay school fees? Click for instructions</span>
-              </div>
-              <div className={`chevron-wrapper ${showHowToPay ? 'rotate' : ''}`}>
-                <ChevronDown size={20} />
-              </div>
-            </button>
+                <div className={`chevron-wrapper ${showHowToPay ? 'rotate' : ''}`}>
+                  <ChevronDown size={20} />
+                </div>
+              </button>
+
+              <a
+                href="https://app.master-fees.com/#details"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pay-fees-now-btn"
+              >
+                <CreditCard size={20} />
+                <span>Pay Fees Now</span>
+              </a>
+            </div>
 
             <AnimatePresence>
               {showHowToPay && (
@@ -324,8 +336,36 @@ const PricingSection: React.FC = () => {
           width: 100%;
         }
 
-        .payment-notif-bar {
+        .payment-actions-container {
+          display: flex;
+          align-items: stretch;
           width: 100%;
+          background: white;
+        }
+
+        .pay-fees-now-btn {
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: #422006;
+          color: #F0AC00;
+          padding: 20px 30px;
+          text-decoration: none;
+          font-family: 'Instrument Sans', sans-serif;
+          font-weight: 700;
+          font-size: 16px;
+          transition: all 0.2s;
+          border-left: 1px solid rgba(240, 172, 0, 0.1);
+        }
+
+        .pay-fees-now-btn:hover {
+          background: #5d2e0a;
+          color: white;
+        }
+
+        .payment-notif-bar {
+          flex: 1;
           padding: 20px 30px;
           display: flex;
           justify-content: space-between;
@@ -732,6 +772,17 @@ const PricingSection: React.FC = () => {
           .fees-grid {
             grid-template-columns: 1fr;
             gap: 40px;
+          }
+
+          .payment-actions-container {
+            flex-direction: column-reverse;
+          }
+
+          .pay-fees-now-btn {
+            border-left: none;
+            border-bottom: 1px solid rgba(240, 172, 0, 0.1);
+            justify-content: center;
+            width: 100%;
           }
 
           .fee-premium-card {
