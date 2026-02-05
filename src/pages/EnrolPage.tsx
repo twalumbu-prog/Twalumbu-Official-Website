@@ -260,328 +260,329 @@ const EnrolPage: React.FC = () => {
     };
 
     return (
-        <div className="enrol-page">
-            <div className="container">
-                <div className="enrol-header">
-                    <h1>Enrolment Application</h1>
-                    <p>Begin your child's journey at Twalumbu Education Centre. Please fill in the details below carefully.</p>
-                </div>
-
-                <div className="enrol-container glass">
-                    {/* Progress Indicator */}
-                    <div className="enrol-steps">
-                        {steps.map((step) => (
-                            <div
-                                key={step.id}
-                                className={`step-item ${currentStep === step.id ? 'active' : ''} ${currentStep > step.id ? 'completed' : ''}`}
-                                onClick={() => currentStep > step.id && setCurrentStep(step.id)}
-                            >
-                                <div className="step-icon">
-                                    {currentStep > step.id ? <Check size={18} /> : step.icon}
-                                </div>
-                                <span className="step-title">{step.title}</span>
-                            </div>
-                        ))}
+        <>
+            <div className="enrol-page">
+                <div className="container">
+                    <div className="enrol-header">
+                        <h1>Enrolment Application</h1>
+                        <p>Begin your child's journey at Twalumbu Education Centre. Please fill in the details below carefully.</p>
                     </div>
 
-                    <form className="enrol-form" onSubmit={handleSubmit}>
-                        <AnimatePresence mode="wait">
-                            {isSuccess ? (
-                                <motion.div
-                                    className="success-view"
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                    <div className="enrol-container glass">
+                        {/* Progress Indicator */}
+                        <div className="enrol-steps">
+                            {steps.map((step) => (
+                                <div
+                                    key={step.id}
+                                    className={`step-item ${currentStep === step.id ? 'active' : ''} ${currentStep > step.id ? 'completed' : ''}`}
+                                    onClick={() => currentStep > step.id && setCurrentStep(step.id)}
                                 >
-                                    <div className="success-lottie">✓</div>
-                                    <h2>Application Submitted!</h2>
-                                    <p>Your enrollment application has been processed. A PDF copy has been downloaded for your records, and a confirmation email has been sent to both you and the school administration.</p>
-                                    <button className="btn-primary" onClick={() => window.location.href = '/'}>Return to Home</button>
-                                    <button className="btn-secondary glass ml-4" onClick={generateOfficialPDF}>
-                                        <Download size={18} />
-                                        Download Again
-                                    </button>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key={currentStep}
-                                    variants={stepVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    {currentStep === 1 && (
-                                        <div className="step-content">
-                                            <h3>Section 1 – Child's Information</h3>
-                                            <div className="form-grid-3">
-                                                <div className="form-group">
-                                                    <label>First Name *</label>
-                                                    <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Last Name *</label>
-                                                    <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Other Name(s)</label>
-                                                    <input type="text" name="otherNames" value={formData.otherNames} onChange={handleInputChange} />
-                                                </div>
-                                            </div>
-                                            <div className="form-grid-3">
-                                                <div className="form-group">
-                                                    <label>Nationality *</label>
-                                                    <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Grade Being Applied For *</label>
-                                                    <select name="gradeApplied" value={formData.gradeApplied} onChange={handleInputChange} required>
-                                                        <option value="">Select Grade</option>
-                                                        <option value="Baby Class">Baby Class</option>
-                                                        <option value="Middle Class">Middle Class</option>
-                                                        <option value="Reception">Reception</option>
-                                                        <option value="Grade 1">Grade 1</option>
-                                                        <option value="Grade 2">Grade 2</option>
-                                                        <option value="Grade 3">Grade 3</option>
-                                                        <option value="Grade 4">Grade 4</option>
-                                                        <option value="Grade 5">Grade 5</option>
-                                                        <option value="Grade 6">Grade 6</option>
-                                                        <option value="Grade 7">Grade 7</option>
-                                                    </select>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Age of the Child *</label>
-                                                    <input type="number" name="age" min="1" max="20" value={formData.age} onChange={handleInputChange} required />
-                                                </div>
-                                            </div>
-                                            <div className="form-grid">
-                                                <div className="form-group">
-                                                    <label>Gender *</label>
-                                                    <select name="gender" value={formData.gender} onChange={handleInputChange} required>
-                                                        <option value="">Select Gender</option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                    </select>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Date of Birth *</label>
-                                                    <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} required />
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Previous School</label>
-                                                <input type="text" name="previousSchool" placeholder="Name of previous school (if any)" value={formData.previousSchool} onChange={handleInputChange} />
-                                            </div>
-                                            <div className="form-grid">
-                                                <div className="form-group">
-                                                    <label>Medical Conditions?</label>
-                                                    <div className="radio-group">
-                                                        <label><input type="radio" name="medicalConditions" value="Yes" checked={formData.medicalConditions === 'Yes'} onChange={handleInputChange} /> Yes</label>
-                                                        <label><input type="radio" name="medicalConditions" value="No" checked={formData.medicalConditions === 'No'} onChange={handleInputChange} /> No</label>
+                                    <div className="step-icon">
+                                        {currentStep > step.id ? <Check size={18} /> : step.icon}
+                                    </div>
+                                    <span className="step-title">{step.title}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <form className="enrol-form" onSubmit={handleSubmit}>
+                            <AnimatePresence mode="wait">
+                                {isSuccess ? (
+                                    <motion.div
+                                        className="success-view"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                    >
+                                        <div className="success-lottie">✓</div>
+                                        <h2>Application Submitted!</h2>
+                                        <p>Your enrollment application has been processed. A PDF copy has been downloaded for your records, and a confirmation email has been sent to both you and the school administration.</p>
+                                        <button className="btn-primary" onClick={() => window.location.href = '/'}>Return to Home</button>
+                                        <button className="btn-secondary glass ml-4" onClick={generateOfficialPDF}>
+                                            <Download size={18} />
+                                            Download Again
+                                        </button>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key={currentStep}
+                                        variants={stepVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {currentStep === 1 && (
+                                            <div className="step-content">
+                                                <h3>Section 1 – Child's Information</h3>
+                                                <div className="form-grid-3">
+                                                    <div className="form-group">
+                                                        <label>First Name *</label>
+                                                        <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required />
                                                     </div>
-                                                    {formData.medicalConditions === 'Yes' && (
-                                                        <input type="text" name="medicalDetails" placeholder="Please specify" value={formData.medicalDetails} onChange={handleInputChange} className="mt-2" />
+                                                    <div className="form-group">
+                                                        <label>Last Name *</label>
+                                                        <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Other Name(s)</label>
+                                                        <input type="text" name="otherNames" value={formData.otherNames} onChange={handleInputChange} />
+                                                    </div>
+                                                </div>
+                                                <div className="form-grid-3">
+                                                    <div className="form-group">
+                                                        <label>Nationality *</label>
+                                                        <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Grade Being Applied For *</label>
+                                                        <select name="gradeApplied" value={formData.gradeApplied} onChange={handleInputChange} required>
+                                                            <option value="">Select Grade</option>
+                                                            <option value="Baby Class">Baby Class</option>
+                                                            <option value="Middle Class">Middle Class</option>
+                                                            <option value="Reception">Reception</option>
+                                                            <option value="Grade 1">Grade 1</option>
+                                                            <option value="Grade 2">Grade 2</option>
+                                                            <option value="Grade 3">Grade 3</option>
+                                                            <option value="Grade 4">Grade 4</option>
+                                                            <option value="Grade 5">Grade 5</option>
+                                                            <option value="Grade 6">Grade 6</option>
+                                                            <option value="Grade 7">Grade 7</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Age of the Child *</label>
+                                                        <input type="number" name="age" min="1" max="20" value={formData.age} onChange={handleInputChange} required />
+                                                    </div>
+                                                </div>
+                                                <div className="form-grid">
+                                                    <div className="form-group">
+                                                        <label>Gender *</label>
+                                                        <select name="gender" value={formData.gender} onChange={handleInputChange} required>
+                                                            <option value="">Select Gender</option>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Date of Birth *</label>
+                                                        <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} required />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Previous School</label>
+                                                    <input type="text" name="previousSchool" placeholder="Name of previous school (if any)" value={formData.previousSchool} onChange={handleInputChange} />
+                                                </div>
+                                                <div className="form-grid">
+                                                    <div className="form-group">
+                                                        <label>Medical Conditions?</label>
+                                                        <div className="radio-group">
+                                                            <label><input type="radio" name="medicalConditions" value="Yes" checked={formData.medicalConditions === 'Yes'} onChange={handleInputChange} /> Yes</label>
+                                                            <label><input type="radio" name="medicalConditions" value="No" checked={formData.medicalConditions === 'No'} onChange={handleInputChange} /> No</label>
+                                                        </div>
+                                                        {formData.medicalConditions === 'Yes' && (
+                                                            <input type="text" name="medicalDetails" placeholder="Please specify" value={formData.medicalDetails} onChange={handleInputChange} className="mt-2" />
+                                                        )}
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Any Allergies?</label>
+                                                        <div className="radio-group">
+                                                            <label><input type="radio" name="allergies" value="Yes" checked={formData.allergies === 'Yes'} onChange={handleInputChange} /> Yes</label>
+                                                            <label><input type="radio" name="allergies" value="No" checked={formData.allergies === 'No'} onChange={handleInputChange} /> No</label>
+                                                        </div>
+                                                        {formData.allergies === 'Yes' && (
+                                                            <input type="text" name="allergyDetails" placeholder="Please specify" value={formData.allergyDetails} onChange={handleInputChange} className="mt-2" />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Will the Child be using other Services Like the Bus?</label>
+                                                    <div className="radio-group">
+                                                        <label><input type="radio" name="useTransport" value="Yes" checked={formData.useTransport === 'Yes'} onChange={handleInputChange} /> Yes</label>
+                                                        <label><input type="radio" name="useTransport" value="No" checked={formData.useTransport === 'No'} onChange={handleInputChange} /> No</label>
+                                                    </div>
+                                                    {formData.useTransport === 'Yes' && (
+                                                        <input type="text" name="stationCode" placeholder="Station Code (if known)" value={formData.stationCode} onChange={handleInputChange} className="mt-2" />
                                                     )}
                                                 </div>
-                                                <div className="form-group">
-                                                    <label>Any Allergies?</label>
-                                                    <div className="radio-group">
-                                                        <label><input type="radio" name="allergies" value="Yes" checked={formData.allergies === 'Yes'} onChange={handleInputChange} /> Yes</label>
-                                                        <label><input type="radio" name="allergies" value="No" checked={formData.allergies === 'No'} onChange={handleInputChange} /> No</label>
-                                                    </div>
-                                                    {formData.allergies === 'Yes' && (
-                                                        <input type="text" name="allergyDetails" placeholder="Please specify" value={formData.allergyDetails} onChange={handleInputChange} className="mt-2" />
-                                                    )}
-                                                </div>
                                             </div>
-                                            <div className="form-group">
-                                                <label>Will the Child be using other Services Like the Bus?</label>
-                                                <div className="radio-group">
-                                                    <label><input type="radio" name="useTransport" value="Yes" checked={formData.useTransport === 'Yes'} onChange={handleInputChange} /> Yes</label>
-                                                    <label><input type="radio" name="useTransport" value="No" checked={formData.useTransport === 'No'} onChange={handleInputChange} /> No</label>
+                                        )}
+
+                                        {currentStep === 2 && (
+                                            <div className="step-content">
+                                                <h3>Section 2 – Parent/Guardian's Information</h3>
+                                                <div className="form-grid-3">
+                                                    <div className="form-group">
+                                                        <label>First Name *</label>
+                                                        <input type="text" name="parentFirst" value={formData.parentFirst} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Last Name *</label>
+                                                        <input type="text" name="parentLast" value={formData.parentLast} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Other Name(s)</label>
+                                                        <input type="text" name="parentOther" value={formData.parentOther} onChange={handleInputChange} />
+                                                    </div>
                                                 </div>
-                                                {formData.useTransport === 'Yes' && (
-                                                    <input type="text" name="stationCode" placeholder="Station Code (if known)" value={formData.stationCode} onChange={handleInputChange} className="mt-2" />
+                                                <div className="form-grid">
+                                                    <div className="form-group">
+                                                        <label>Nationality *</label>
+                                                        <input type="text" name="parentNationality" value={formData.parentNationality} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Identification Number (NRC/Passport/Driver's License) *</label>
+                                                        <input type="text" name="parentID" value={formData.parentID} onChange={handleInputChange} required />
+                                                    </div>
+                                                </div>
+                                                <div className="form-grid">
+                                                    <div className="form-group">
+                                                        <label>Occupation *</label>
+                                                        <input type="text" name="occupation" value={formData.occupation} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Place of Work *</label>
+                                                        <input type="text" name="placeOfWork" value={formData.placeOfWork} onChange={handleInputChange} required />
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Relation to the Child *</label>
+                                                    <input type="text" name="relationship" placeholder="e.g., Mother, Father, Guardian" value={formData.relationship} onChange={handleInputChange} required />
+                                                </div>
+                                                <div className="form-grid-3">
+                                                    <div className="form-group">
+                                                        <label>Email Address *</label>
+                                                        <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Phone Number 1 *</label>
+                                                        <input type="tel" name="phone1" value={formData.phone1} onChange={handleInputChange} required />
+                                                        <div className="checkbox-group mt-2">
+                                                            <label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={formData.phone1IsWhatsApp === 'Yes'}
+                                                                    onChange={(e) => setFormData(prev => ({
+                                                                        ...prev,
+                                                                        phone1IsWhatsApp: e.target.checked ? 'Yes' : 'No',
+                                                                        whatsappNumber: e.target.checked ? '' : prev.whatsappNumber
+                                                                    }))}
+                                                                /> This number is also my WhatsApp contact
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Phone Number 2</label>
+                                                        <input type="tel" name="phone2" value={formData.phone2} onChange={handleInputChange} />
+                                                    </div>
+                                                </div>
+                                                {formData.phone1IsWhatsApp === 'No' && (
+                                                    <div className="form-group">
+                                                        <label>WhatsApp Number *</label>
+                                                        <input type="tel" name="whatsappNumber" placeholder="Enter your WhatsApp number" value={formData.whatsappNumber} onChange={handleInputChange} required />
+                                                    </div>
                                                 )}
                                             </div>
-                                        </div>
-                                    )}
+                                        )}
 
-                                    {currentStep === 2 && (
-                                        <div className="step-content">
-                                            <h3>Section 2 – Parent/Guardian's Information</h3>
-                                            <div className="form-grid-3">
-                                                <div className="form-group">
-                                                    <label>First Name *</label>
-                                                    <input type="text" name="parentFirst" value={formData.parentFirst} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Last Name *</label>
-                                                    <input type="text" name="parentLast" value={formData.parentLast} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Other Name(s)</label>
-                                                    <input type="text" name="parentOther" value={formData.parentOther} onChange={handleInputChange} />
-                                                </div>
-                                            </div>
-                                            <div className="form-grid">
-                                                <div className="form-group">
-                                                    <label>Nationality *</label>
-                                                    <input type="text" name="parentNationality" value={formData.parentNationality} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Identification Number (NRC/Passport/Driver's License) *</label>
-                                                    <input type="text" name="parentID" value={formData.parentID} onChange={handleInputChange} required />
-                                                </div>
-                                            </div>
-                                            <div className="form-grid">
-                                                <div className="form-group">
-                                                    <label>Occupation *</label>
-                                                    <input type="text" name="occupation" value={formData.occupation} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Place of Work *</label>
-                                                    <input type="text" name="placeOfWork" value={formData.placeOfWork} onChange={handleInputChange} required />
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Relation to the Child *</label>
-                                                <input type="text" name="relationship" placeholder="e.g., Mother, Father, Guardian" value={formData.relationship} onChange={handleInputChange} required />
-                                            </div>
-                                            <div className="form-grid-3">
-                                                <div className="form-group">
-                                                    <label>Email Address *</label>
-                                                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Phone Number 1 *</label>
-                                                    <input type="tel" name="phone1" value={formData.phone1} onChange={handleInputChange} required />
-                                                    <div className="checkbox-group mt-2">
-                                                        <label>
-                                                            <input 
-                                                                type="checkbox" 
-                                                                checked={formData.phone1IsWhatsApp === 'Yes'} 
-                                                                onChange={(e) => setFormData(prev => ({ 
-                                                                    ...prev, 
-                                                                    phone1IsWhatsApp: e.target.checked ? 'Yes' : 'No',
-                                                                    whatsappNumber: e.target.checked ? '' : prev.whatsappNumber
-                                                                }))} 
-                                                            /> This number is also my WhatsApp contact
-                                                        </label>
+
+                                        {currentStep === 3 && (
+                                            <div className="step-content">
+                                                <h3>Section 3 – Uploads</h3>
+                                                <p className="section-description">Please upload the required documents. Both files will be sent as attachments in the enrollment email.</p>
+                                                <div className="form-grid">
+                                                    <div className="form-group">
+                                                        <label>Upload Assessment Results *</label>
+                                                        <input
+                                                            type="file"
+                                                            name="assessmentResults"
+                                                            accept=".pdf,.jpg,.jpeg,.png"
+                                                            onChange={handleFileChange}
+                                                            required
+                                                        />
+                                                        <small className="help-text">Accepted formats: PDF, JPG, PNG (Max 5MB)</small>
+                                                        {formData.assessmentResults && (
+                                                            <div className="file-preview">✓ {formData.assessmentResults.name}</div>
+                                                        )}
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label>Upload Picture of the Child *</label>
+                                                        <input
+                                                            type="file"
+                                                            name="childPhoto"
+                                                            accept=".jpg,.jpeg,.png"
+                                                            onChange={handleFileChange}
+                                                            required
+                                                        />
+                                                        <small className="help-text">Accepted formats: JPG, PNG (Max 5MB)</small>
+                                                        {formData.childPhoto && (
+                                                            <div className="file-preview">✓ {formData.childPhoto.name}</div>
+                                                        )}
                                                     </div>
                                                 </div>
+                                            </div>
+                                        )}
+
+                                        {currentStep === 4 && (
+                                            <div className="step-content">
+                                                <h3>Section 4 – How Did You Hear About Us?</h3>
                                                 <div className="form-group">
-                                                    <label>Phone Number 2</label>
-                                                    <input type="tel" name="phone2" value={formData.phone2} onChange={handleInputChange} />
+                                                    <label>How did you find out about the school? *</label>
+                                                    <select name="referral" value={formData.referral} onChange={handleInputChange} required>
+                                                        <option value="">Select Source</option>
+                                                        <option value="Social Media">Social Media</option>
+                                                        <option value="Friend/Relative">Friend / Relative</option>
+                                                        <option value="Google Search">Google Search</option>
+                                                        <option value="Radio">Radio Advertisement</option>
+                                                        <option value="Newspaper">Newspaper</option>
+                                                        <option value="Billboard">Billboard</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label>Why did you choose to bring your child to our school?</label>
+                                                    <textarea name="applyReason" rows={4} placeholder="Please share your reasons for choosing Twalumbu Education Centre..." value={formData.applyReason} onChange={handleInputChange}></textarea>
                                                 </div>
                                             </div>
-                                            {formData.phone1IsWhatsApp === 'No' && (
-                                                <div className="form-group">
-                                                    <label>WhatsApp Number *</label>
-                                                    <input type="tel" name="whatsappNumber" placeholder="Enter your WhatsApp number" value={formData.whatsappNumber} onChange={handleInputChange} required />
+                                        )}
+
+                                        {currentStep === 5 && (
+                                            <div className="step-content">
+                                                <h3>Section 5 – Declaration</h3>
+                                                <div className="declaration-box">
+                                                    <p>I hereby declare that all information provided in this application is true, complete, and accurate to the best of my knowledge. I confirm that I have read, understood, and agree to abide by the rules, policies, and regulations of <strong>Twalumbu Education Centre</strong>.</p>
+                                                    <p>I further grant consent for the school to obtain and administer emergency medical treatment for my child when necessary, should I be unreachable.</p>
                                                 </div>
+                                                <div className="form-group checkbox-group">
+                                                    <label>
+                                                        <input type="checkbox" required /> I agree to the terms and conditions stated above.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="enrol-footer">
+                                            {currentStep > 1 && (
+                                                <button type="button" className="btn-secondary glass" onClick={prevStep}>
+                                                    <ChevronLeft size={18} /> Back
+                                                </button>
+                                            )}
+                                            {currentStep < steps.length ? (
+                                                <button type="button" className="btn-primary" onClick={nextStep} style={{ marginLeft: 'auto' }}>
+                                                    Next Step <ChevronRight size={18} />
+                                                </button>
+                                            ) : (
+                                                <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ marginLeft: 'auto' }}>
+                                                    {isSubmitting ? 'Processing...' : 'Submit Application'}
+                                                    <ShieldCheck size={18} className="ml-2" />
+                                                </button>
                                             )}
                                         </div>
-                                    )}
-
-
-                                    {currentStep === 3 && (
-                                        <div className="step-content">
-                                            <h3>Section 3 – Uploads</h3>
-                                            <p className="section-description">Please upload the required documents. Both files will be sent as attachments in the enrollment email.</p>
-                                            <div className="form-grid">
-                                                <div className="form-group">
-                                                    <label>Upload Assessment Results *</label>
-                                                    <input
-                                                        type="file"
-                                                        name="assessmentResults"
-                                                        accept=".pdf,.jpg,.jpeg,.png"
-                                                        onChange={handleFileChange}
-                                                        required
-                                                    />
-                                                    <small className="help-text">Accepted formats: PDF, JPG, PNG (Max 5MB)</small>
-                                                    {formData.assessmentResults && (
-                                                        <div className="file-preview">✓ {formData.assessmentResults.name}</div>
-                                                    )}
-                                                </div>
-                                                <div className="form-group">
-                                                    <label>Upload Picture of the Child *</label>
-                                                    <input
-                                                        type="file"
-                                                        name="childPhoto"
-                                                        accept=".jpg,.jpeg,.png"
-                                                        onChange={handleFileChange}
-                                                        required
-                                                    />
-                                                    <small className="help-text">Accepted formats: JPG, PNG (Max 5MB)</small>
-                                                    {formData.childPhoto && (
-                                                        <div className="file-preview">✓ {formData.childPhoto.name}</div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {currentStep === 4 && (
-                                        <div className="step-content">
-                                            <h3>Section 4 – How Did You Hear About Us?</h3>
-                                            <div className="form-group">
-                                                <label>How did you find out about the school? *</label>
-                                                <select name="referral" value={formData.referral} onChange={handleInputChange} required>
-                                                    <option value="">Select Source</option>
-                                                    <option value="Social Media">Social Media</option>
-                                                    <option value="Friend/Relative">Friend / Relative</option>
-                                                    <option value="Google Search">Google Search</option>
-                                                    <option value="Radio">Radio Advertisement</option>
-                                                    <option value="Newspaper">Newspaper</option>
-                                                    <option value="Billboard">Billboard</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Why did you choose to bring your child to our school?</label>
-                                                <textarea name="applyReason" rows={4} placeholder="Please share your reasons for choosing Twalumbu Education Centre..." value={formData.applyReason} onChange={handleInputChange}></textarea>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {currentStep === 5 && (
-                                        <div className="step-content">
-                                            <h3>Section 5 – Declaration</h3>
-                                            <div className="declaration-box">
-                                                <p>I hereby declare that all information provided in this application is true, complete, and accurate to the best of my knowledge. I confirm that I have read, understood, and agree to abide by the rules, policies, and regulations of <strong>Twalumbu Education Centre</strong>.</p>
-                                                <p>I further grant consent for the school to obtain and administer emergency medical treatment for my child when necessary, should I be unreachable.</p>
-                                            </div>
-                                            <div className="form-group checkbox-group">
-                                                <label>
-                                                    <input type="checkbox" required /> I agree to the terms and conditions stated above.
-                                                </label>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="enrol-footer">
-                                        {currentStep > 1 && (
-                                            <button type="button" className="btn-secondary glass" onClick={prevStep}>
-                                                <ChevronLeft size={18} /> Back
-                                            </button>
-                                        )}
-                                        {currentStep < steps.length ? (
-                                            <button type="button" className="btn-primary" onClick={nextStep} style={{ marginLeft: 'auto' }}>
-                                                Next Step <ChevronRight size={18} />
-                                            </button>
-                                        ) : (
-                                            <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ marginLeft: 'auto' }}>
-                                                {isSubmitting ? 'Processing...' : 'Submit Application'}
-                                                <ShieldCheck size={18} className="ml-2" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </form>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </form>
+                    </div>
                 </div>
-            </div>
             </div>
 
             <style>{`
@@ -815,6 +816,7 @@ const EnrolPage: React.FC = () => {
           }
         }
       `}</style>
+        </>
     );
 };
 
