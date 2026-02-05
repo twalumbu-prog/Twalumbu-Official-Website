@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CreditCard, Info, ChevronDown, FileText } from 'lucide-react';
+import { CreditCard, Info, ChevronDown, FileText, X, CheckCircle2, ClipboardList } from 'lucide-react';
 import { useContent } from '../../context/ContentContext';
 import { EditableText, EditableImage } from '../admin/InlineEditor';
 
@@ -10,6 +10,7 @@ const PricingSection: React.FC = () => {
   const schoolFees = content.pricing.schoolFees;
   const [showHowToPay, setShowHowToPay] = useState(false);
   const [openCategory, setOpenCategory] = useState<number | null>(null);
+  const [activeModal, setActiveModal] = useState<'requirements' | 'how-to-apply' | null>(null);
 
   const toggleCategory = (index: number) => {
     setOpenCategory(openCategory === index ? null : index);
@@ -163,13 +164,19 @@ const PricingSection: React.FC = () => {
                   </h3>
 
                   <div className="card-actions">
-                    <button className="requirements-btn">
+                    <button
+                      className="requirements-btn"
+                      onClick={() => setActiveModal('requirements')}
+                    >
                       <span>View Requirements</span>
                       <FileText size={18} />
                     </button>
-                    <Link to="/enrol" className="apply-btn-link">
+                    <button
+                      className="apply-btn-link"
+                      onClick={() => setActiveModal('how-to-apply')}
+                    >
                       How to Apply?
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -263,6 +270,139 @@ const PricingSection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Interactive Overlays */}
+      <AnimatePresence>
+        {activeModal && (
+          <div className="modal-root">
+            <motion.div
+              className="modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveModal(null)}
+            />
+            <motion.div
+              className="modal-container"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            >
+              <button
+                className="modal-close-btn"
+                onClick={() => setActiveModal(null)}
+                aria-label="Close modal"
+              >
+                <X size={24} />
+              </button>
+
+              {activeModal === 'requirements' ? (
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <div className="modal-icon-wrapper gold">
+                      <ClipboardList size={32} />
+                    </div>
+                    <h2 className="modal-title">Student Requirements</h2>
+                    <p className="modal-subtitle">Items needed for each term/year</p>
+                  </div>
+
+                  <div className="requirements-list">
+                    <div className="requirement-item">
+                      <div className="item-check"><CheckCircle2 size={20} /></div>
+                      <div className="item-text">
+                        <strong>One ream of paper</strong>
+                        <span>Per year</span>
+                      </div>
+                    </div>
+                    <div className="requirement-item">
+                      <div className="item-check"><CheckCircle2 size={20} /></div>
+                      <div className="item-text">
+                        <strong>Three rolls of tissue</strong>
+                        <span>Per term</span>
+                      </div>
+                    </div>
+                    <div className="requirement-item">
+                      <div className="item-check"><CheckCircle2 size={20} /></div>
+                      <div className="item-text">
+                        <strong>One hand wash or soap</strong>
+                        <span>Per term</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="books-note">
+                    <div className="note-icon">
+                      <Info size={20} />
+                    </div>
+                    <p>
+                      <strong>Side note:</strong> The child needs books, but the quantity of the books will depend on the grade they are in.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <div className="modal-icon-wrapper brown">
+                      <FileText size={32} />
+                    </div>
+                    <h2 className="modal-title">Application Instructions</h2>
+                    <p className="modal-subtitle">Simple steps to join our family</p>
+                  </div>
+
+                  <div className="steps-container">
+                    <div className="step-item">
+                      <div className="step-number">1</div>
+                      <div className="step-text">
+                        <strong>Assessment</strong>
+                        <p>Bring your child for a physical assessment at our campus.</p>
+                      </div>
+                    </div>
+                    <div className="step-item">
+                      <div className="step-number">2</div>
+                      <div className="step-text">
+                        <strong>Online Application</strong>
+                        <p>After assessment, click "Apply Now" on our website and fill in basic info.</p>
+                      </div>
+                    </div>
+                    <div className="step-item">
+                      <div className="step-number">3</div>
+                      <div className="step-text">
+                        <strong>Documentation</strong>
+                        <p>Upload a picture of your child and their assessment results for our records.</p>
+                      </div>
+                    </div>
+                    <div className="step-item">
+                      <div className="step-number">4</div>
+                      <div className="step-text">
+                        <strong>Fee Payment</strong>
+                        <p>Make a payment of <strong>K100</strong> as the enrollment fee.</p>
+                      </div>
+                    </div>
+                    <div className="step-item">
+                      <div className="step-number">5</div>
+                      <div className="step-text">
+                        <strong>Review & Feedback</strong>
+                        <p>Application is sent to both emails. Feedback is provided within 1-2 days.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="modal-footer">
+                    <Link
+                      to="/enrol"
+                      className="modal-primary-btn"
+                      onClick={() => setActiveModal(null)}
+                    >
+                      Open Application Form
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         .pricing-premium-section {
@@ -469,6 +609,7 @@ const PricingSection: React.FC = () => {
           margin-top: 8px;
           font-style: italic;
         }
+
 
         /* Fee Cards */
         .fees-grid {
@@ -787,6 +928,273 @@ const PricingSection: React.FC = () => {
 
           .fee-premium-card {
             margin-bottom: 10px;
+          }
+        }
+
+        /* Modal Styles */
+        .modal-root {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .modal-backdrop {
+          position: absolute;
+          inset: 0;
+          background: rgba(66, 32, 6, 0.4);
+          backdrop-filter: blur(8px);
+        }
+
+        .modal-container {
+          position: relative;
+          background: white;
+          width: 100%;
+          max-width: 540px;
+          border-radius: 32px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-close-btn {
+          position: absolute;
+          top: 24px;
+          right: 24px;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #F9FAFB;
+          border: none;
+          color: #4B5563;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+          z-index: 10;
+        }
+
+        .modal-close-btn:hover {
+          background: #EEF2F6;
+          color: #422006;
+          transform: rotate(90deg);
+        }
+
+        .modal-content {
+          padding: 48px;
+        }
+
+        .modal-header {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .modal-icon-wrapper {
+          width: 64px;
+          height: 64px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px auto;
+        }
+
+        .modal-icon-wrapper.gold {
+          background: rgba(240, 172, 0, 0.1);
+          color: #F0AC00;
+        }
+
+        .modal-icon-wrapper.brown {
+          background: rgba(66, 32, 6, 0.1);
+          color: #422006;
+        }
+
+        .modal-title {
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: 32px;
+          font-weight: 800;
+          color: #422006;
+          margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+          color: #6B7280;
+          font-family: 'Inter', sans-serif;
+          font-size: 16px;
+        }
+
+        /* Requirements List */
+        .requirements-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 32px;
+        }
+
+        .requirement-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          padding: 20px;
+          background: #F9FAFB;
+          border-radius: 20px;
+          border: 1px solid #F1F1F1;
+          transition: all 0.2s;
+        }
+
+        .requirement-item:hover {
+          background: white;
+          border-color: #F0AC00;
+          transform: translateX(8px);
+          box-shadow: 0 4px 12px rgba(240, 172, 0, 0.1);
+        }
+
+        .item-check {
+          color: #F0AC00;
+          margin-top: 2px;
+        }
+
+        .item-text {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .item-text strong {
+          color: #422006;
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        .item-text span {
+          color: #6B7280;
+          font-size: 14px;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .books-note {
+          display: flex;
+          gap: 12px;
+          padding: 20px;
+          background: #FFFCF5;
+          border-radius: 16px;
+          border: 1px dashed #F0AC00;
+        }
+
+        .note-icon {
+          color: #F0AC00;
+          flex-shrink: 0;
+        }
+
+        .books-note p {
+          font-size: 14px;
+          color: #4B5563;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        /* Steps Style */
+        .steps-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          margin-bottom: 40px;
+        }
+
+        .step-item {
+          display: flex;
+          gap: 20px;
+          position: relative;
+        }
+
+        .step-item:not(:last-child):after {
+          content: '';
+          position: absolute;
+          left: 18px;
+          top: 44px;
+          bottom: -20px;
+          width: 2px;
+          background: #E5E7EB;
+          opacity: 0.5;
+        }
+
+        .step-number {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #422006;
+          color: #F0AC00;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Instrument Sans', sans-serif;
+          font-weight: 800;
+          font-size: 16px;
+          flex-shrink: 0;
+          z-index: 1;
+        }
+
+        .step-text strong {
+          display: block;
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #422006;
+          margin-bottom: 4px;
+        }
+
+        .step-text p {
+          color: #6B7280;
+          font-size: 14px;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .modal-footer {
+          margin-top: 8px;
+        }
+
+        .modal-primary-btn {
+          width: 100%;
+          display: block;
+          text-align: center;
+          background: #422006;
+          color: white;
+          padding: 18px;
+          border-radius: 16px;
+          font-family: 'Instrument Sans', sans-serif;
+          font-weight: 700;
+          font-size: 16px;
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+
+        .modal-primary-btn:hover {
+          background: #5d2e0a;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(66, 32, 6, 0.2);
+        }
+
+        /* Mobile specific modal adjustments */
+        @media (max-width: 640px) {
+          .modal-content {
+            padding: 32px 24px;
+          }
+          .modal-title {
+            font-size: 26px;
+          }
+          .modal-container {
+            border-radius: 24px;
+          }
+          .requirement-item {
+            padding: 16px;
+          }
+          .item-text strong {
+            font-size: 16px;
           }
         }
       `}</style>
