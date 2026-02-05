@@ -41,6 +41,7 @@ const EnrolPage: React.FC = () => {
         email: '',
         phone1: '',
         phone2: '',
+        phone1IsWhatsApp: 'Yes',
         whatsappNumber: '',
         // Section 3: Uploads
         assessmentResults: null as File | null,
@@ -194,11 +195,14 @@ const EnrolPage: React.FC = () => {
         doc.line(55, sec2Top + 57, 95, sec2Top + 57);
 
         doc.text('Phone Number 2:', 25, sec2Top + 64);
-        doc.text(`${formData.phone2}`, 55, sec2Top + 64);
+        doc.text(`${formData.phone2 || 'N/A'}`, 55, sec2Top + 64);
         doc.line(55, sec2Top + 65, 95, sec2Top + 65);
 
         doc.text('WhatsApp Number:', 25, sec2Top + 72);
-        doc.text(`${formData.whatsappNumber}`, 55, sec2Top + 72);
+        const whatsappDisplay = formData.phone1IsWhatsApp === 'Yes'
+            ? `${formData.phone1} (Same as Phone 1)`
+            : (formData.whatsappNumber || 'N/A');
+        doc.text(whatsappDisplay, 55, sec2Top + 72);
         doc.line(55, sec2Top + 73, 95, sec2Top + 73);
 
         // Right Column
@@ -332,7 +336,8 @@ const EnrolPage: React.FC = () => {
                                                     <label>Grade Being Applied For *</label>
                                                     <select name="gradeApplied" value={formData.gradeApplied} onChange={handleInputChange} required>
                                                         <option value="">Select Grade</option>
-                                                        <option value="Pre-School">Pre-School</option>
+                                                        <option value="Baby Class">Baby Class</option>
+                                                        <option value="Middle Class">Middle Class</option>
                                                         <option value="Reception">Reception</option>
                                                         <option value="Grade 1">Grade 1</option>
                                                         <option value="Grade 2">Grade 2</option>
@@ -450,16 +455,31 @@ const EnrolPage: React.FC = () => {
                                                 <div className="form-group">
                                                     <label>Phone Number 1 *</label>
                                                     <input type="tel" name="phone1" value={formData.phone1} onChange={handleInputChange} required />
+                                                    <div className="checkbox-group mt-2">
+                                                        <label>
+                                                            <input 
+                                                                type="checkbox" 
+                                                                checked={formData.phone1IsWhatsApp === 'Yes'} 
+                                                                onChange={(e) => setFormData(prev => ({ 
+                                                                    ...prev, 
+                                                                    phone1IsWhatsApp: e.target.checked ? 'Yes' : 'No',
+                                                                    whatsappNumber: e.target.checked ? '' : prev.whatsappNumber
+                                                                }))} 
+                                                            /> This number is also my WhatsApp contact
+                                                        </label>
+                                                    </div>
                                                 </div>
                                                 <div className="form-group">
                                                     <label>Phone Number 2</label>
                                                     <input type="tel" name="phone2" value={formData.phone2} onChange={handleInputChange} />
                                                 </div>
                                             </div>
-                                            <div className="form-group">
-                                                <label>WhatsApp Number (If applicable)</label>
-                                                <input type="tel" name="whatsappNumber" placeholder="WhatsApp number (if different from above)" value={formData.whatsappNumber} onChange={handleInputChange} />
-                                            </div>
+                                            {formData.phone1IsWhatsApp === 'No' && (
+                                                <div className="form-group">
+                                                    <label>WhatsApp Number *</label>
+                                                    <input type="tel" name="whatsappNumber" placeholder="Enter your WhatsApp number" value={formData.whatsappNumber} onChange={handleInputChange} required />
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
