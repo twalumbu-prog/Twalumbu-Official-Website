@@ -2,6 +2,13 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const StructuredData: React.FC = () => {
+    const websiteData = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Twalumbu Education Centre",
+        "url": "https://www.twalumbueducentre.com"
+    };
+
     const schoolData = {
         "@context": "https://schema.org",
         "@type": "School",
@@ -33,6 +40,9 @@ const StructuredData: React.FC = () => {
 
     return (
         <Helmet>
+            <script type="application/ld+json">
+                {JSON.stringify(websiteData)}
+            </script>
             <script type="application/ld+json">
                 {JSON.stringify(schoolData)}
             </script>
