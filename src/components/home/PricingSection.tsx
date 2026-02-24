@@ -341,63 +341,64 @@ const PricingSection: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <div className="modal-icon-wrapper brown">
-                      <FileText size={32} />
+                <>
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <div className="modal-icon-wrapper brown">
+                        <FileText size={32} />
+                      </div>
+                      <h2 className="modal-title">Application Instructions</h2>
+                      <p className="modal-subtitle">Simple steps to join our family</p>
                     </div>
-                    <h2 className="modal-title">Application Instructions</h2>
-                    <p className="modal-subtitle">Simple steps to join our family</p>
-                  </div>
 
-                  <div className="steps-container">
-                    <div className="step-item">
-                      <div className="step-number">1</div>
-                      <div className="step-text">
-                        <strong>Assessment</strong>
-                        <p>Bring your child for a physical assessment at our campus.</p>
+                    <div className="steps-container">
+                      <div className="step-item">
+                        <div className="step-number">1</div>
+                        <div className="step-text">
+                          <strong>Assessment</strong>
+                          <p>Bring your child for a physical assessment at our campus.</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="step-item">
-                      <div className="step-number">2</div>
-                      <div className="step-text">
-                        <strong>Online Application</strong>
-                        <p>After assessment, click "Apply Now" on our website and fill in basic info.</p>
+                      <div className="step-item">
+                        <div className="step-number">2</div>
+                        <div className="step-text">
+                          <strong>Online Application</strong>
+                          <p>After assessment, click "Apply Now" on our website and fill in basic info.</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="step-item">
-                      <div className="step-number">3</div>
-                      <div className="step-text">
-                        <strong>Documentation</strong>
-                        <p>Upload a picture of your child and their assessment results for our records.</p>
+                      <div className="step-item">
+                        <div className="step-number">3</div>
+                        <div className="step-text">
+                          <strong>Documentation</strong>
+                          <p>Upload a picture of your child and their assessment results for our records.</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="step-item">
-                      <div className="step-number">4</div>
-                      <div className="step-text">
-                        <strong>Fee Payment</strong>
-                        <p>Make a payment of <strong>K100</strong> as the enrollment fee.</p>
+                      <div className="step-item">
+                        <div className="step-number">4</div>
+                        <div className="step-text">
+                          <strong>Fee Payment</strong>
+                          <p>Make a payment of <strong>K100</strong> as the enrollment fee.</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="step-item">
-                      <div className="step-number">5</div>
-                      <div className="step-text">
-                        <strong>Review & Feedback</strong>
-                        <p>Application is sent to both emails. Feedback is provided within 1-2 days.</p>
+                      <div className="step-item">
+                        <div className="step-number">5</div>
+                        <div className="step-text">
+                          <strong>Review & Feedback</strong>
+                          <p>Application is sent to both emails. Feedback is provided within 1-2 days.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-
                   <div className="modal-footer">
                     <Link
                       to="/enrol"
                       className="modal-primary-btn"
                       onClick={() => setActiveModal(null)}
                     >
-                      Open Application Form
+                      Apply Now
                     </Link>
                   </div>
-                </div>
+                </>
               )}
             </motion.div>
           </div>
@@ -954,8 +955,11 @@ const PricingSection: React.FC = () => {
           background: white;
           width: 100%;
           max-width: 540px;
+          max-height: 90vh;
           border-radius: 32px;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          display: flex;
+          flex-direction: column;
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
@@ -986,6 +990,8 @@ const PricingSection: React.FC = () => {
 
         .modal-content {
           padding: 48px;
+          overflow-y: auto;
+          flex: 1;
         }
 
         .modal-header {
@@ -1155,7 +1161,10 @@ const PricingSection: React.FC = () => {
         }
 
         .modal-footer {
-          margin-top: 8px;
+          padding: 24px 48px;
+          background: white;
+          border-top: 1px solid #F1F1F1;
+          z-index: 5;
         }
 
         .modal-primary-btn {
@@ -1184,11 +1193,15 @@ const PricingSection: React.FC = () => {
           .modal-content {
             padding: 32px 24px;
           }
+          .modal-footer {
+            padding: 20px 24px;
+          }
           .modal-title {
             font-size: 26px;
           }
           .modal-container {
             border-radius: 24px;
+            max-height: 95vh;
           }
           .requirement-item {
             padding: 16px;
