@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronRight, ChevronLeft, Download, User, Users, HelpCircle, ShieldCheck, Upload } from 'lucide-react';
+import SEO from '../components/common/SEO';
 
 const steps = [
     { id: 1, title: "Child's Information", icon: <User size={20} /> },
@@ -261,6 +262,11 @@ const EnrolPage: React.FC = () => {
 
     return (
         <>
+            <SEO
+                title="Enroll Now"
+                description="Apply for enrollment at Twalumbu Education Centre. Start your child's journey towards excellence with our easy online application."
+                keywords="Twalumbu enrollment, school application Zambia, join Twalumbu, Chongwe school admission"
+            />
             <div className="enrol-page">
                 <div className="container">
                     <div className="enrol-header">

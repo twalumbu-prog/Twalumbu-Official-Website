@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import StructuredData from '../common/StructuredData';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
@@ -19,6 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, forceShowNavFooter }) => {
 
   return (
     <div className="app-layout">
+      <StructuredData />
       {/* Background Micro-animations */}
       {!isAdminPage && (
         <div className="background-decor">

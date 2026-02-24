@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Share2, Printer } from 'lucide-react';
+import SEO from '../components/common/SEO';
 
 // This would normally come from an API or shared state/context
 const allNews = [
@@ -30,57 +31,64 @@ const NewsDetail: React.FC = () => {
   const news = allNews.find(n => n.id === Number(id)) || allNews[0];
 
   return (
-    <motion.div
-      className="news-detail-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <div className="detail-hero">
-        <img src={news.image} alt={news.title} className="hero-img" />
-        <div className="hero-overlay">
-          <div className="container">
-            <button className="back-btn glass" onClick={() => navigate(-1)}>
-              <ArrowLeft size={18} />
-              Back to Home
-            </button>
+    <>
+      <SEO
+        title={news.title}
+        description={news.content.substring(0, 160).trim() + '...'}
+        image={news.image}
+        type="article"
+      />
+      <motion.div
+        className="news-detail-page"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <div className="detail-hero">
+          <img src={news.image} alt={news.title} className="hero-img" />
+          <div className="hero-overlay">
+            <div className="container">
+              <button className="back-btn glass" onClick={() => navigate(-1)}>
+                <ArrowLeft size={18} />
+                Back to Home
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <article className="article-container container">
-        <header className="article-header">
-          <div className="article-meta">
-            <div className="meta-item">
-              <Calendar size={16} />
-              <span>{news.date}</span>
+        <article className="article-container container">
+          <header className="article-header">
+            <div className="article-meta">
+              <div className="meta-item">
+                <Calendar size={16} />
+                <span>{news.date}</span>
+              </div>
+              <div className="meta-item">
+                <span className="author-tag">By {news.author}</span>
+              </div>
             </div>
-            <div className="meta-item">
-              <span className="author-tag">By {news.author}</span>
+            <h1>{news.title}</h1>
+            <div className="article-tools">
+              <button className="tool-btn"><Share2 size={18} /> Share</button>
+              <button className="tool-btn"><Printer size={18} /> Print</button>
             </div>
-          </div>
-          <h1>{news.title}</h1>
-          <div className="article-tools">
-            <button className="tool-btn"><Share2 size={18} /> Share</button>
-            <button className="tool-btn"><Printer size={18} /> Print</button>
-          </div>
-        </header>
+          </header>
 
-        <section className="article-content">
-          {news.content.split('\n\n').map((paragraph, idx) => (
-            <p key={idx}>{paragraph.trim()}</p>
-          ))}
-        </section>
+          <section className="article-content">
+            {news.content.split('\n\n').map((paragraph, idx) => (
+              <p key={idx}>{paragraph.trim()}</p>
+            ))}
+          </section>
 
-        <footer className="article-footer">
-          <button className="btn-secondary glass" onClick={() => navigate(-1)}>
-            <ArrowLeft size={18} />
-            Back to All News
-          </button>
-        </footer>
-      </article>
+          <footer className="article-footer">
+            <button className="btn-secondary glass" onClick={() => navigate(-1)}>
+              <ArrowLeft size={18} />
+              Back to All News
+            </button>
+          </footer>
+        </article>
 
-      <style>{`
+        <style>{`
         .news-detail-page {
           background: #fff;
           padding-bottom: 80px;
@@ -216,7 +224,8 @@ const NewsDetail: React.FC = () => {
           }
         }
       `}</style>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import SEO from '../components/common/SEO';
 import HeroSection from '../components/home/HeroSection';
 import MarketingSummary from '../components/home/MarketingSummary';
 import MissionSection from '../components/home/MissionSection';
@@ -22,6 +23,11 @@ const Home: React.FC = () => {
 
     return (
         <div className="home-page">
+            <SEO
+                title="Home"
+                description="Welcome to Twalumbu Education Centre. We provide excellence in early childhood, primary, and secondary education in Chongwe, Zambia. Join us for a holistic learning experience."
+                keywords="Twalumbu, Education, Chongwe, Zambia, School, Best School, Primary School, Early Childhood"
+            />
             <HeroSection />
             <MarketingSummary />
             <MissionSection />
