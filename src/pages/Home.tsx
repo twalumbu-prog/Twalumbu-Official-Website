@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SEO from '../components/common/SEO';
 import HeroSection from '../components/home/HeroSection';
 import MarketingSummary from '../components/home/MarketingSummary';
@@ -10,16 +11,16 @@ import NewsSection from '../components/home/NewsSection';
 import ContactSection from '../components/home/ContactSection';
 
 const Home: React.FC = () => {
+    const { hash } = useLocation();
+
     useEffect(() => {
-        // Smooth scroll for anchor links
-        const hash = window.location.hash;
         if (hash) {
             const element = document.querySelector(hash);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
-    }, []);
+    }, [hash]);
 
     return (
         <div className="home-page">

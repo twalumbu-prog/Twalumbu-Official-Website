@@ -70,8 +70,10 @@ export type ContentData = {
             id: number;
             title: string;
             summary: string;
+            content?: string;
             date: string;
             image: string;
+            author?: string;
         }[];
     };
     contact: {
@@ -229,6 +231,12 @@ export const defaultContent: ContentData = {
                 id: 1,
                 title: "Twalumbu Wins National Debate Championship",
                 summary: "Our senior debate team emerged victorious in the Inter-School National Debate Championship held last weekend.",
+                author: "Dept. of Humanities",
+                content: `Our senior debate team emerged victorious in the Inter-School National Debate Championship held last weekend.
+
+The competition brought together 32 schools from across the country and showcased exceptional critical thinking, public speaking, and research skills.
+
+Principal Mutale expressed immense pride in the team's achievement, noting that this victory reflects the school's commitment to nurturing intellectual curiosity and effective communication.`,
                 date: "May 15, 2024",
                 image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=2070&auto=format&fit=crop"
             },
@@ -236,6 +244,10 @@ export const defaultContent: ContentData = {
                 id: 2,
                 title: "New STEM Laboratory Inaugurated",
                 summary: "We are excited to announce the opening of our state-of-the-art STEM laboratory, equipped with the latest technology.",
+                author: "Science Department",
+                content: `We are excited to announce the opening of our state-of-the-art STEM laboratory, equipped with the latest technology.
+
+The lab expands hands-on learning in robotics, computing, physics, and chemistry—helping learners build confidence through practical experimentation and guided projects.`,
                 date: "April 28, 2024",
                 image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1986&auto=format&fit=crop"
             },
@@ -243,6 +255,10 @@ export const defaultContent: ContentData = {
                 id: 3,
                 title: "Annual Sports Day 2024 Success",
                 summary: "Highlights from our most successful sports day ever, featuring record-breaking performances from our athletes.",
+                author: "Sports Department",
+                content: `Our annual Sports Day was a huge success, featuring record-breaking performances from our athletes.
+
+Thank you to parents, staff, and learners for the energy and support that made the day memorable—from track events to team games and award celebrations.`,
                 date: "April 10, 2024",
                 image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=2070&auto=format&fit=crop"
             },
@@ -250,6 +266,10 @@ export const defaultContent: ContentData = {
                 id: 4,
                 title: "Community Outreach: Tree Planting",
                 summary: "Student volunteers led a community tree-planting initiative as part of our sustainability program.",
+                author: "Student Council",
+                content: `Student volunteers led a community tree-planting initiative as part of our sustainability program.
+
+Through partnerships with local leaders, learners practiced stewardship and teamwork while helping create greener shared spaces.`,
                 date: "March 22, 2024",
                 image: "https://images.unsplash.com/photo-1542601906990-b4d3fb773b09?q=80&w=2013&auto=format&fit=crop"
             },
@@ -257,6 +277,10 @@ export const defaultContent: ContentData = {
                 id: 5,
                 title: "Excellence in Arts: Drama Festival",
                 summary: "Our performing arts department showcased an incredible series of plays at the Regional Drama Festival.",
+                author: "Arts Department",
+                content: `Our performing arts department showcased an incredible series of plays at the Regional Drama Festival.
+
+Learners demonstrated confidence, creativity, and collaboration—bringing stories to life through acting, music, and stagecraft.`,
                 date: "March 05, 2024",
                 image: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=2069&auto=format&fit=crop"
             }

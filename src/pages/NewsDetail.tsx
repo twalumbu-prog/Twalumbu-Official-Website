@@ -3,38 +3,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Share2, Printer } from 'lucide-react';
 import SEO from '../components/common/SEO';
-
-// This would normally come from an API or shared state/context
-const allNews = [
-  {
-    id: 1,
-    title: "Twalumbu Wins National Debate Championship",
-    content: `
-      Our senior debate team emerged victorious in the Inter-School National Debate Championship held last weekend. The competition, which brought together 32 schools from across the country, saw our students demonstrating exceptional critical thinking, public speaking, and research skills.
-
-      The team, led by Grade 11 student Chisomo Mwanza, argued persuasively on topics ranging from economic policy to environmental sustainability. "It was a challenging but rewarding experience," said Chisomo. "We spent weeks preparing, and it's incredible to see that hard work pay off."
-
-      Principal Mutale expressed immense pride in the team's achievement, noting that this victory reflects the school's commitment to nurturing intellectual curiosity and effective communication. The team will now move on to represent the region at the upcoming international invitational in Southern Africa.
-    `,
-    date: "May 15, 2024",
-    image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=2070&auto=format&fit=crop",
-    author: "Dept. of Humanities"
-  },
-  // ... other news items (simplified for now)
-];
+import { useContent } from '../context/ContentContext';
 
 const NewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { content } = useContent();
 
-  // Find the news item or use a mock if not found
-  const news = allNews.find(n => n.id === Number(id)) || allNews[0];
+  const articleId = Number(id);
+  const news = content.news.articles.find(n => n.id === articleId) || content.news.articles[0];
+  const articleBody = (news as any).content || news.summary;
+  const author = (news as any).author;
 
   return (
     <>
       <SEO
         title={news.title}
-        description={news.content.substring(0, 160).trim() + '...'}
+        description={(articleBody || '').toString().substring(0, 160).trim() + '...'}
         image={news.image}
         type="article"
       />
@@ -63,9 +48,11 @@ const NewsDetail: React.FC = () => {
                 <Calendar size={16} />
                 <span>{news.date}</span>
               </div>
-              <div className="meta-item">
-                <span className="author-tag">By {news.author}</span>
-              </div>
+              {author && (
+                <div className="meta-item">
+                  <span className="author-tag">By {author}</span>
+                </div>
+              )}
             </div>
             <h1>{news.title}</h1>
             <div className="article-tools">
@@ -75,9 +62,12 @@ const NewsDetail: React.FC = () => {
           </header>
 
           <section className="article-content">
-            {news.content.split('\n\n').map((paragraph, idx) => (
-              <p key={idx}>{paragraph.trim()}</p>
-            ))}
+            {(articleBody || '')
+              .toString()
+              .split('\n\n')
+              .map((paragraph: string, idx: number) => (
+                <p key={idx}>{paragraph.trim()}</p>
+              ))}
           </section>
 
           <footer className="article-footer">

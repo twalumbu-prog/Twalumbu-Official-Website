@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import logoImg from '../../assets/images/logo.png';
 import '../../styles/global.css';
@@ -10,6 +10,7 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
 
   useEffect(() => {
@@ -54,18 +55,19 @@ const Navbar: React.FC = () => {
         {/* Desktop Links Section */}
         <div className="nav-links-section desktop-only">
           {navLinks.map((link) => {
+            const targetHash = link.path.replace('/', ''); // "/#pricing" -> "#pricing"
             const isActive = link.path === '/'
-              ? (!window.location.hash || window.location.hash === '#home')
-              : window.location.hash === link.path.replace('/', '');
+              ? (location.pathname === '/' && (!location.hash || location.hash === '#home'))
+              : (location.pathname === '/' && location.hash === targetHash);
 
             return (
-              <a
+              <Link
                 key={link.name}
-                href={link.path}
+                to={link.path}
                 className={`nav-item ${isActive ? 'active' : ''}`}
               >
                 {link.name}
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -93,14 +95,14 @@ const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="mobile-menu glass">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.path}
+              to={link.path}
               className="nav-link"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
           <button
             className="btn-primary"

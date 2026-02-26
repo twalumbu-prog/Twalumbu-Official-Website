@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import StructuredData from '../common/StructuredData';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 interface LayoutProps {
@@ -13,6 +13,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, forceShowNavFooter }) => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin') && !forceShowNavFooter;
+  const reduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,42 +27,30 @@ const Layout: React.FC<LayoutProps> = ({ children, forceShowNavFooter }) => {
         <div className="background-decor">
           <motion.div
             className="decor-blob blob-1"
-            animate={{
-              scale: [1, 1.2, 1],
-              x: [0, 50, 0],
-              y: [0, 30, 0],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            animate={
+              reduceMotion
+                ? { scale: 1, x: 0, y: 0 }
+                : { scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }
+            }
+            transition={reduceMotion ? { duration: 0 } : { duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="decor-blob blob-2"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              x: [0, -40, 0],
-              y: [0, 60, 0],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            animate={
+              reduceMotion
+                ? { scale: 1, x: 0, y: 0 }
+                : { scale: [1.2, 1, 1.2], x: [0, -40, 0], y: [0, 60, 0] }
+            }
+            transition={reduceMotion ? { duration: 0 } : { duration: 25, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="decor-blob blob-3"
-            animate={{
-              scale: [1, 1.1, 1],
-              x: [0, 30, 0],
-              y: [0, -40, 0],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            animate={
+              reduceMotion
+                ? { scale: 1, x: 0, y: 0 }
+                : { scale: [1, 1.1, 1], x: [0, 30, 0], y: [0, -40, 0] }
+            }
+            transition={reduceMotion ? { duration: 0 } : { duration: 18, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
       )}

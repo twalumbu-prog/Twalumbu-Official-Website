@@ -74,7 +74,7 @@ const MarketingSummary: React.FC = () => {
   };
 
   return (
-    <section className="marketing-summary" id="offers">
+    <section className="marketing-summary" id="highlights">
       {/* Decorative wavy background */}
       <div className="wavy-bg">
         <svg width="1280" height="408" viewBox="0 0 1280 408" fill="none" xmlns="http://www.w3.org/2000/svg">
