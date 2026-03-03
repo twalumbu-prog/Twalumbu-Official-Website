@@ -260,7 +260,7 @@ The lab expands hands-on learning in robotics, computing, physics, and chemistry
 
 Thank you to parents, staff, and learners for the energy and support that made the day memorable—from track events to team games and award celebrations.`,
                 date: "April 10, 2024",
-                image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=1200&auto=format&fit=crop"
+                image: "https://images.unsplash.com/photo-1549413217-19597143c683?q=80&w=1200&auto=format&fit=crop"
             },
             {
                 id: 4,
