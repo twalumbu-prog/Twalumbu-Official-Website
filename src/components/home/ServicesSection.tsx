@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useContent } from '../../context/ContentContext';
 import { EditableText, EditableImage } from '../admin/InlineEditor';
+import { Baby, BookOpen, Atom, ArrowRight } from 'lucide-react';
 
 const ServicesSection: React.FC = () => {
   const { content } = useContent();
@@ -11,43 +12,80 @@ const ServicesSection: React.FC = () => {
   const lowerPrimary = services.find(s => s.id === 'lower-primary') || services[1];
   const upperPrimary = services.find(s => s.id === 'upper-primary') || services[2];
 
+  const getIcon = (id: string) => {
+    switch (id) {
+      case 'early-childhood': return <Baby className="service-icon" />;
+      case 'lower-primary': return <BookOpen className="service-icon" />;
+      case 'upper-primary': return <Atom className="service-icon" />;
+      default: return <BookOpen className="service-icon" />;
+    }
+  };
+
   const ServiceCard = ({ service, index, className = "" }: { service: any, index: number, className?: string }) => (
-    <div className={`new-service-card ${className}`}>
-      <div className="card-inner">
-        <div className="card-image-bg">
+    <motion.div
+      className={`premium-service-card ${className}`}
+      whileHover="hover"
+      initial="rest"
+    >
+      <div className="card-image-wrapper">
+        <motion.div
+          className="card-image-motion"
+          variants={{
+            rest: { scale: 1 },
+            hover: { scale: 1.1 }
+          }}
+          transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+        >
           <EditableImage
             contentKey={`services.items.${index}.image`}
             src={service.image}
             alt={service.title}
           />
-        </div>
-        <div className="card-overlay">
-          <div className="card-content-flex">
-            <div className="card-title-area">
-              <EditableText
-                contentKey={`services.items.${index}.title`}
-                value={service.title}
-                multiline
-              />
+        </motion.div>
+
+        <div className="card-glass-overlay">
+          <div className="card-header-flex">
+            <div className="icon-badge">
+              {getIcon(service.id)}
             </div>
-            <div className="card-separator"></div>
-            <div className="card-description-area">
+            <div className="title-stack">
+              <span className="tiny-tag">Education Stage</span>
+              <h3 className="card-main-title">
+                <EditableText
+                  contentKey={`services.items.${index}.title`}
+                  value={service.title}
+                />
+              </h3>
+            </div>
+          </div>
+
+          <div className="card-description-box">
+            <p className="card-desc-text">
               <EditableText
                 contentKey={`services.items.${index}.description`}
                 value={service.description}
                 multiline
               />
-            </div>
+            </p>
+            <motion.div
+              className="card-action"
+              variants={{
+                rest: { x: 0, opacity: 0.7 },
+                hover: { x: 5, opacity: 1 }
+              }}
+            >
+              <span>Explore Program</span>
+              <ArrowRight size={16} />
+            </motion.div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
-    <section className="services-redesign-section" id="offers">
+    <section className="services-polished-section" id="offers">
       <div className="services-main-container">
-        {/* Centered Section Header on White Background */}
         <motion.div
           className="services-header"
           initial={{ opacity: 0, y: 30 }}
@@ -55,261 +93,265 @@ const ServicesSection: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <span className="section-tag-gold">Services We Offer</span>
-          <h2 className="section-title-dark">
-            Education for every stage
+          <span className="premium-tag">Services We Offer</span>
+          <h2 className="premium-title">
+            Exceptional Education for <span>Every Stage</span>
           </h2>
-          <div className="header-underline-gold">
-            <svg width="120" height="8" viewBox="0 0 120 8" fill="none">
-              <path d="M2 5.5C30 2 90 2 118 5.5" stroke="#F0AC00" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-          </div>
+          <div className="title-accent-bar"></div>
         </motion.div>
-        <motion.div
-          className="services-layout-grid"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-20px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.25
-              }
-            }
-          }}
-        >
-          <div className="services-row-top">
-            <motion.div variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } }} style={{ flex: 1 }}>
-              <ServiceCard
-                service={earlyChildhood}
-                index={services.indexOf(earlyChildhood)}
-                className="card-early-childhood"
-              />
-            </motion.div>
-            <motion.div variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } }} style={{ flex: 1 }}>
-              <ServiceCard
-                service={lowerPrimary}
-                index={services.indexOf(lowerPrimary)}
-                className="card-lower-primary"
-              />
-            </motion.div>
+
+        <div className="services-grid-redesign">
+          <div className="grid-top-row">
+            <ServiceCard
+              service={earlyChildhood}
+              index={services.indexOf(earlyChildhood)}
+              className="card-early"
+            />
+            <ServiceCard
+              service={lowerPrimary}
+              index={services.indexOf(lowerPrimary)}
+              className="card-lower"
+            />
           </div>
-          <motion.div className="services-row-bottom" variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } }}>
+          <div className="grid-bottom-row">
             <ServiceCard
               service={upperPrimary}
               index={services.indexOf(upperPrimary)}
-              className="card-upper-primary"
+              className="card-upper"
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
       <style>{`
-        .services-redesign-section {
-          padding: 48px 0;
-          background: #fff;
-          display: flex;
-          justify-content: center;
+        .services-polished-section {
+          padding: 100px 0;
+          background: #fafaf9; /* warm stone-50 */
+          overflow: hidden;
         }
 
         .services-main-container {
-          width: 100%;
-          max-width: 1280px;
+          max-width: 1200px;
+          margin: 0 auto;
           padding: 0 24px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 64px;
         }
 
         .services-header {
           text-align: center;
+          margin-bottom: 80px;
           display: flex;
           flex-direction: column;
           align-items: center;
         }
 
-        .section-tag-gold {
+        .premium-tag {
           color: #9F691F;
           font-family: 'Inter', sans-serif;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 2px;
-          font-size: 14px;
-          margin-bottom: 12px;
+          letter-spacing: 0.15em;
+          font-size: 13px;
+          margin-bottom: 16px;
+          background: rgba(159, 105, 31, 0.1);
+          padding: 6px 16px;
+          border-radius: 100px;
         }
 
-        .section-title-dark {
-          font-size: 48px;
-          color: #422006;
+        .premium-title {
+          font-size: 52px;
+          color: #2A1409;
           font-family: 'Instrument Sans', sans-serif;
           font-weight: 800;
-          margin: 0;
+          line-height: 1.1;
+          max-width: 700px;
         }
 
-        .header-underline-gold {
-          margin-top: -5px;
+        .premium-title span {
+          color: #F0AC00;
         }
 
-        .wavy-divider {
-          width: 100%;
-          display: flex;
-          justify-content: center;
+        .title-accent-bar {
+          width: 80px;
+          height: 4px;
+          background: #F0AC00;
+          margin-top: 24px;
+          border-radius: 2px;
         }
 
-        .wavy-divider svg {
-          width: 100%;
-          height: auto;
-          max-width: 1068px;
-        }
-
-        .services-layout-grid {
-          width: 100%;
-          max-width: 1068px;
+        .services-grid-redesign {
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 32px;
         }
 
-        .services-row-top {
-          display: flex;
-          gap: 24px;
-          width: 100%;
+        .grid-top-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
         }
 
-        .card-early-childhood {
-          flex: 1;
-        }
-
-        .card-lower-primary {
-          flex: 1;
-        }
-
-        .services-row-bottom {
-          width: 100%;
-        }
-
-        .new-service-card {
-          background: white;
-          border-radius: 24px;
-          padding: 10px;
-          box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
-          outline: 1px solid #F4F4F5; /* zinc-100 */
-          height: 275px;
+        .premium-service-card {
+          position: relative;
+          height: 420px;
+          border-radius: 32px;
           overflow: hidden;
+          background: #fff;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+          cursor: pointer;
         }
 
-        .card-inner {
+        /* Large card for bottom row */
+        .grid-bottom-row .premium-service-card {
+          height: 380px;
+        }
+
+        .card-image-wrapper {
           position: relative;
           width: 100%;
           height: 100%;
-          border-radius: 6px;
-          overflow: hidden;
         }
 
-        .card-image-bg {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
+        .card-image-motion {
+          width: 100%;
+          height: 100%;
         }
 
-        .card-image-bg img {
+        .card-image-motion img {
           width: 100%;
           height: 100%;
           object-fit: cover;
         }
 
-        .card-overlay {
+        .card-glass-overlay {
           position: absolute;
-          inset: 0;
-          background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 15%, rgba(255,255,255,1) 80%);
-          z-index: 1;
+          bottom: 24px;
+          left: 24px;
+          right: 24px;
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 24px;
+          padding: 24px;
           display: flex;
-          align-items: flex-end;
-          padding: 16px 24px;
+          flex-direction: column;
+          gap: 20px;
+          transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
         }
 
-        .card-content-flex {
+        .premium-service-card:hover .card-glass-overlay {
+          background: rgba(255, 255, 255, 0.95);
+          transform: translateY(-8px);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header-flex {
           display: flex;
           align-items: center;
-          gap: 28px;
-          width: 100%;
+          gap: 16px;
         }
 
-        .card-title-area {
-          flex: 0 0 160px;
-          color: #2A1409;
-          font-size: 19px;
-          font-family: 'Inter', sans-serif;
-          font-weight: 600;
-          line-height: 1.2;
-        }
-
-        .card-separator {
-          width: 1px;
-          height: 48px;
+        .icon-badge {
+          width: 52px;
+          height: 52px;
           background: #2A1409;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #F0AC00;
           flex-shrink: 0;
         }
 
-        .card-description-area {
-          flex: 1;
-          color: #2A1409;
-          font-size: 14px;
-          font-family: 'Inter', sans-serif;
-          font-weight: 400;
-          line-height: 1.4;
+        .service-icon {
+          width: 26px;
+          height: 26px;
         }
 
-        /* Responsive state */
-        @media (max-width: 1024px) {
-          .services-main-container {
-            gap: 40px;
-          }
+        .title-stack {
+          display: flex;
+          flex-direction: column;
+        }
 
-          .services-row-top {
-            flex-direction: column;
-            gap: 24px;
+        .tiny-tag {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: #9F691F;
+          font-weight: 700;
+          margin-bottom: 2px;
+        }
+
+        .card-main-title {
+          font-size: 22px;
+          color: #2A1409;
+          font-weight: 700;
+          font-family: 'Instrument Sans', sans-serif;
+          margin: 0;
+        }
+
+        .card-description-box {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .card-desc-text {
+          font-size: 15px;
+          color: #57534e;
+          line-height: 1.6;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .card-action {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #2A1409;
+          font-weight: 700;
+          font-size: 14px;
+        }
+
+        @media (max-width: 991px) {
+          .premium-title {
+            font-size: 42px;
           }
           
-          .card-early-childhood, .card-lower-primary {
-            flex: none;
-            width: 100%;
+          .grid-top-row {
+            grid-template-columns: 1fr;
           }
 
-          .new-service-card {
-            height: 320px;
-          }
-
-          .card-overlay {
-            background: linear-gradient(to bottom, rgba(42, 20, 9, 0) 0%, rgba(42, 20, 9, 0.8) 100%);
-            padding: 24px;
-          }
-
-          .card-content-flex {
-             flex-direction: column;
-             align-items: flex-start;
-             gap: 12px;
-          }
-
-          .card-separator {
-            width: 40px;
-            height: 2px;
-            background: #F0AC00;
+          .premium-service-card {
+            height: 480px !important;
           }
           
-          .card-title-area {
-            flex: none;
-            width: 100%;
-            color: white;
-            font-size: 24px;
+          .card-desc-text {
+            -webkit-line-clamp: 3;
           }
+        }
 
-          .card-description-area {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 15px;
+        @media (max-width: 576px) {
+          .services-polished-section {
+            padding: 60px 0;
+          }
+          
+          .premium-title {
+            font-size: 32px;
+          }
+          
+          .card-glass-overlay {
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            padding: 20px;
+          }
+          
+          .card-main-title {
+            font-size: 19px;
           }
         }
       `}</style>
