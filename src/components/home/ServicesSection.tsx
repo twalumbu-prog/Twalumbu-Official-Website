@@ -224,15 +224,15 @@ const ServicesSection: React.FC = () => {
 
         .card-glass-overlay {
           position: absolute;
-          bottom: 24px;
-          left: 24px;
-          right: 24px;
-          background: rgba(255, 255, 255, 0.85);
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 24px;
-          padding: 24px;
+          border-top: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 0;
+          padding: 32px 24px 24px 24px;
           display: flex;
           flex-direction: column;
           gap: 20px;
@@ -240,9 +240,9 @@ const ServicesSection: React.FC = () => {
         }
 
         .premium-service-card:hover .card-glass-overlay {
-          background: rgba(255, 255, 255, 0.95);
-          transform: translateY(-8px);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          background: rgba(255, 255, 255, 1);
+          transform: translateY(0);
+          box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
         }
 
         .card-header-flex {
