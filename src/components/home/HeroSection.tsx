@@ -55,7 +55,7 @@ const HeroSection: React.FC = () => {
               className="hero-title"
               initial={reduceMotion ? false : { opacity: 0, y: 30 }}
               animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-              transition={reduceMotion ? { duration: 0 } : { delay: 0.5, duration: 0.8, ease: "easeOut" }}
+              transition={reduceMotion ? { duration: 0 } : { delay: 0.4, duration: 0.8, ease: "easeOut" }}
             >
               {titleText}
             </motion.h1>
@@ -63,7 +63,7 @@ const HeroSection: React.FC = () => {
               className="hero-title subtitle"
               initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-              transition={reduceMotion ? { duration: 0 } : { delay: 1.0, duration: 0.8, ease: "easeOut" }}
+              transition={reduceMotion ? { duration: 0 } : { delay: 0.8, duration: 0.8, ease: "easeOut" }}
             >
               {subtitleText}
             </motion.h1>
@@ -73,7 +73,7 @@ const HeroSection: React.FC = () => {
           className="hero-cta-wrapper"
           initial={reduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduceMotion ? { duration: 0 } : { delay: 2, duration: 0.8 }}
+          transition={reduceMotion ? { duration: 0 } : { delay: 1.2, duration: 0.8 }}
         >
           <Link to="/#contact" className="hero-cta-button">
             Contact Us
@@ -86,7 +86,7 @@ const HeroSection: React.FC = () => {
         className="hero-image-wrapper"
         initial={reduceMotion ? false : { opacity: 0, scale: 0.9, x: 50 }}
         animate={{ opacity: 1, scale: 1, x: 0 }}
-        transition={reduceMotion ? { duration: 0 } : { delay: 2.5, duration: 1.2, ease: "easeOut" }}
+        transition={reduceMotion ? { duration: 0 } : { delay: 1.2, duration: 1.2, ease: "easeOut" }}
       >
         <div className="image-outer-frame">
           <motion.img
