@@ -133,7 +133,7 @@ export const defaultContent: ContentData = {
                 title: 'Early Childhood Education',
                 subtitle: 'Early Childhood Education',
                 description: 'A nurturing start for young learners with play-based, foundational learning that builds social, emotional, and cognitive skills.',
-                image: 'https://images.unsplash.com/photo-1587560699334-bea93391dcef?q=80&w=800&auto=format&fit=crop',
+                image: '/assets/images/early_childhood.png',
                 features: ['Play-based learning', 'Safe environment', 'Nutritional support']
             },
             {
@@ -141,7 +141,7 @@ export const defaultContent: ContentData = {
                 title: 'Lower Primary Education',
                 subtitle: 'Lower Primary Education',
                 description: 'Focused on literacy, numeracy, and curiosity-driven exploration to strengthen the basics and instill confidence.',
-                image: 'https://images.unsplash.com/photo-1577891721396-22c5a3165dbe?q=80&w=800&auto=format&fit=crop',
+                image: '/assets/images/lower_primary.png',
                 features: ['Core curriculum', 'Extracurricular activities', 'Holistic development']
             },
             {
@@ -149,7 +149,7 @@ export const defaultContent: ContentData = {
                 title: 'Upper Primary Education',
                 subtitle: 'Upper Primary Education',
                 description: 'Where strong foundations are transformed into academic excellence and readiness for secondary education through focused learning and guided independence.',
-                image: 'https://images.unsplash.com/photo-1509062522246-373b1eef7188?q=80&w=800&auto=format&fit=crop',
+                image: '/assets/images/upper_primary.png',
                 features: ['Exam preparation', 'Career guidance', 'Leadership skills']
             }
         ]
@@ -157,7 +157,7 @@ export const defaultContent: ContentData = {
     whyUs: {
         features: [
             {
-                image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop",
+                image: "/assets/images/sports_program.png",
                 title: "Extensive Sports Program",
                 description: "Our world-class sports facilities and professional coaching staff help students develop teamwork, discipline, and physical excellence through competitive and recreational sports.",
                 brochure: "/assets/documents/sports-brochure.pdf"
@@ -184,21 +184,21 @@ export const defaultContent: ContentData = {
                 title: "Pre-School & Kindergarten",
                 price: "K1,700",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
+                image: "/assets/images/early_childhood.png",
                 features: ["Books & Materials Incl.", "Daily Hot Lunch", "Sports & Arts Activities"]
             },
             {
                 title: "Lower Primary (G1-G4)",
                 price: "K1,700",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop",
+                image: "/assets/images/lower_primary.png",
                 features: ["Core Curriculum", "ICT & Science Labs", "Extracurricular Clubs"]
             },
             {
                 title: "Upper Primary (G5-G7)",
                 price: "K1,800 - K2,000",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1523050335392-99949673ced0?q=80&w=800&auto=format&fit=crop",
+                image: "/assets/images/upper_primary.png",
                 features: ["Zambian & Intl Exams", "Advanced Labs", "Career Counseling"]
             }
         ],
