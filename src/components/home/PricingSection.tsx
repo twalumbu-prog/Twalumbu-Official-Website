@@ -366,12 +366,16 @@ const PricingSection: React.FC = () => {
 
         .card-price-overlay {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 20px;
-          background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+          bottom: 12px;
+          left: 12px;
+          padding: 8px 16px;
+          background: rgba(42, 20, 9, 0.4);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border-radius: 12px;
           color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .price-stack {

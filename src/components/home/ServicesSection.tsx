@@ -327,6 +327,11 @@ const ServicesSection: React.FC = () => {
             height: 480px !important;
           }
           
+          /* Ensuring mobile overlay matches desktop refined look */
+          .card-glass-overlay {
+            padding: 24px 20px 20px 20px;
+          }
+
           .card-desc-text {
             -webkit-line-clamp: 3;
           }
@@ -339,13 +344,6 @@ const ServicesSection: React.FC = () => {
           
           .premium-title {
             font-size: 32px;
-          }
-          
-          .card-glass-overlay {
-            left: 16px;
-            right: 16px;
-            bottom: 16px;
-            padding: 20px;
           }
           
           .card-main-title {
