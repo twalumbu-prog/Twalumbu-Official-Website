@@ -141,7 +141,7 @@ export const defaultContent: ContentData = {
                 title: 'Lower Primary Education',
                 subtitle: 'Lower Primary Education',
                 description: 'Focused on literacy, numeracy, and curiosity-driven exploration to strengthen the basics and instill confidence.',
-                image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop',
+                image: 'https://images.unsplash.com/photo-1577891721396-22c5a3165dbe?q=80&w=800&auto=format&fit=crop',
                 features: ['Core curriculum', 'Extracurricular activities', 'Holistic development']
             },
             {
@@ -149,7 +149,7 @@ export const defaultContent: ContentData = {
                 title: 'Upper Primary Education',
                 subtitle: 'Upper Primary Education',
                 description: 'Where strong foundations are transformed into academic excellence and readiness for secondary education through focused learning and guided independence.',
-                image: 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=800&auto=format&fit=crop',
+                image: 'https://images.unsplash.com/photo-1509062522246-373b1eef7188?q=80&w=800&auto=format&fit=crop',
                 features: ['Exam preparation', 'Career guidance', 'Leadership skills']
             }
         ]
@@ -157,13 +157,13 @@ export const defaultContent: ContentData = {
     whyUs: {
         features: [
             {
-                image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop",
                 title: "Extensive Sports Program",
                 description: "Our world-class sports facilities and professional coaching staff help students develop teamwork, discipline, and physical excellence through competitive and recreational sports.",
                 brochure: "/assets/documents/sports-brochure.pdf"
             },
             {
-                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800&auto=format&fit=crop",
                 title: "Vibrant Arts & Science",
                 description: "We believe in the power of creativity. Our arts program offers theater, music, and visual arts, while our tech labs prepare students for a digital world.",
                 brochure: "/assets/documents/arts-brochure.pdf"
@@ -191,14 +191,14 @@ export const defaultContent: ContentData = {
                 title: "Lower Primary (G1-G4)",
                 price: "K1,700",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1509062522246-373b1eef7188?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop",
                 features: ["Core Curriculum", "ICT & Science Labs", "Extracurricular Clubs"]
             },
             {
                 title: "Upper Primary (G5-G7)",
                 price: "K1,800 - K2,000",
                 period: "per Term",
-                image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=800&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1523050335392-99949673ced0?q=80&w=800&auto=format&fit=crop",
                 features: ["Zambian & Intl Exams", "Advanced Labs", "Career Counseling"]
             }
         ],
