@@ -227,10 +227,8 @@ const ServicesSection: React.FC = () => {
           bottom: 0;
           left: 0;
           right: 0;
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-top: 1px solid rgba(255, 255, 255, 0.3);
+          background: #ffffff;
+          border-top: 1px solid #f3f4f6;
           border-radius: 0;
           padding: 32px 24px 24px 24px;
           display: flex;
