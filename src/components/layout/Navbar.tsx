@@ -40,6 +40,7 @@ const Navbar: React.FC = () => {
     { name: 'Why Us', path: '/#why-us' },
     { name: 'Fees', path: '/#pricing' },
     { name: 'Contact Us', path: '/#contact' },
+    { name: 'Tuition Centre', path: '/tuition', highlight: true },
   ];
 
   return (
@@ -55,16 +56,19 @@ const Navbar: React.FC = () => {
         {/* Desktop Links Section */}
         <div className="nav-links-section desktop-only">
           {navLinks.map((link) => {
-            const targetHash = link.path.replace('/', ''); // "/#pricing" -> "#pricing"
-            const isActive = link.path === '/'
-              ? (location.pathname === '/' && (!location.hash || location.hash === '#home'))
-              : (location.pathname === '/' && location.hash === targetHash);
+            const isExternalPage = !link.path.startsWith('/#') && link.path !== '/';
+            const targetHash = link.path.replace('/', '');
+            const isActive = isExternalPage
+              ? location.pathname.startsWith(link.path)
+              : link.path === '/'
+                ? (location.pathname === '/' && (!location.hash || location.hash === '#home'))
+                : (location.pathname === '/' && location.hash === targetHash);
 
             return (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`nav-item ${isActive ? 'active' : ''}`}
+                className={`nav-item ${isActive ? 'active' : ''} ${(link as any).highlight ? 'nav-item-highlight' : ''}`}
               >
                 {link.name}
               </Link>
@@ -192,6 +196,21 @@ const Navbar: React.FC = () => {
 
         .nav-item:hover {
           color: #F0AC00;
+        }
+
+        .nav-item-highlight {
+          color: #c48a00;
+          font-weight: 600;
+          border-bottom: 3px solid rgba(240,172,0,0.35);
+        }
+
+        .nav-item-highlight:hover {
+          color: #F0AC00;
+          border-bottom-color: #F0AC00;
+        }
+
+        .nav-item-highlight.active {
+          border-bottom-color: #F0AC00;
         }
 
         .apply-section {

@@ -7,6 +7,8 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 const Home = lazy(() => import('./pages/Home'));
 const NewsDetail = lazy(() => import('./pages/NewsDetail'));
 const EnrolPage = lazy(() => import('./pages/EnrolPage'));
+const TuitionPage = lazy(() => import('./pages/TuitionPage'));
+const TuitionApplyPage = lazy(() => import('./pages/TuitionApplyPage'));
 const AdminLogin = lazy(() => import('./pages/Admin/Login'));
 const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
 
@@ -18,6 +20,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/enrol" element={<EnrolPage />} />
+          <Route path="/tuition" element={<TuitionPage />} />
+          <Route path="/tuition/apply" element={<TuitionApplyPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
