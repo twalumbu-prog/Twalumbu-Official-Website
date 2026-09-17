@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Clock, Users, CheckCircle, ArrowRight, GraduationCap, Target, Award, Smartphone, Zap } from 'lucide-react';
+import { BookOpen, Users, ArrowRight, GraduationCap, Target, Award, Smartphone, Zap } from 'lucide-react';
 import SEO from '../components/common/SEO';
 import logoImg from '../assets/images/logo.png';
 
