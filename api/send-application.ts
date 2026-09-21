@@ -1,9 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
+import { supabase } from './_supabase';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbu.edu.zm>';
-const TEC_TO  = 'twalumbuaccsdept@gmail.com';
+const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbueducentre.com>';
+const TEC_TO  = 'admissions@twalumbueducentre.com';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -56,6 +57,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   `;
 
   try {
+    // Save to database
+    await supabase.from('submissions').insert({
+      type: 'tuition',
+      full_name: applicant_name,
+      email,
+      phone,
+      position: programme,
+      raw_data: req.body,
+    });
+
     await resend.emails.send({
       from: FROM,
       to: TEC_TO,

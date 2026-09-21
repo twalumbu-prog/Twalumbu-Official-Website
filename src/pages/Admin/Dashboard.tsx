@@ -1,21 +1,80 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart3, Layout, ClipboardList, LogOut, Save,
   Trash2, Plus, Type, Newspaper, Edit3,
-  TrendingUp, MousePointer2, Smartphone, Info
+  TrendingUp, MousePointer2, Smartphone, Info,
+  Inbox, ChevronDown, ChevronUp, RefreshCw, CheckCircle, Mail, Phone, Briefcase, GraduationCap
 } from 'lucide-react';
 import { useContent } from '../../context/ContentContext';
 import Home from '../Home';
 import AppLayout from '../../components/layout/Layout';
 
+const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET as string;
+
+interface Submission {
+  id: string;
+  type: 'tuition' | 'careers';
+  full_name: string;
+  email: string;
+  phone: string;
+  position: string;
+  status: 'new' | 'reviewed' | 'contacted' | 'archived';
+  notes: string | null;
+  created_at: string;
+  raw_data: Record<string, unknown>;
+}
+
 const AdminDashboard: React.FC = () => {
   const { content, setEditMode, saveContent, updateContent } = useContent();
-  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'editor' | 'form' | 'news'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'editor' | 'form' | 'news' | 'submissions'>('overview');
   const [editingNews, setEditingNews] = useState<any>(null);
   const [isNewsModalOpen, setIsNewsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Submissions state
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [subFilter, setSubFilter] = useState<'all' | 'tuition' | 'careers'>('all');
+  const [subStatusFilter, setSubStatusFilter] = useState<'all' | 'new' | 'reviewed' | 'contacted' | 'archived'>('all');
+  const [subLoading, setSubLoading] = useState(false);
+  const [expandedSub, setExpandedSub] = useState<string | null>(null);
+  const [subNewCount, setSubNewCount] = useState(0);
+
+  const fetchSubmissions = useCallback(async () => {
+    setSubLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (subFilter !== 'all') params.set('type', subFilter);
+      if (subStatusFilter !== 'all') params.set('status', subStatusFilter);
+      const res = await fetch(`/api/get-submissions?${params}`, {
+        headers: { 'x-admin-secret': ADMIN_SECRET },
+      });
+      if (!res.ok) throw new Error('Failed');
+      const { submissions: data } = await res.json();
+      setSubmissions(data ?? []);
+      setSubNewCount((data ?? []).filter((s: Submission) => s.status === 'new').length);
+    } catch {
+      // silently fail — user sees empty list
+    } finally {
+      setSubLoading(false);
+    }
+  }, [subFilter, subStatusFilter]);
+
+  useEffect(() => {
+    if (activeTab === 'submissions') fetchSubmissions();
+  }, [activeTab, fetchSubmissions]);
+
+  const updateStatus = async (id: string, status: string, notes?: string) => {
+    await fetch('/api/update-submission', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET },
+      body: JSON.stringify({ id, status, notes }),
+    });
+    setSubmissions(prev =>
+      prev.map(s => s.id === id ? { ...s, status: status as Submission['status'], ...(notes !== undefined ? { notes } : {}) } : s)
+    );
+  };
 
   useEffect(() => {
     const isAdmin = localStorage.getItem('isAdmin');
@@ -62,6 +121,20 @@ const AdminDashboard: React.FC = () => {
           </button>
           <button className={activeTab === 'news' ? 'active' : ''} onClick={() => setActiveTab('news')}>
             <Newspaper size={20} /> News & Events
+          </button>
+          <button
+            className={`sub-nav-btn ${activeTab === 'submissions' ? 'active' : ''}`}
+            onClick={() => setActiveTab('submissions')}
+            style={{ position: 'relative' }}
+          >
+            <Inbox size={20} /> Submissions
+            {subNewCount > 0 && (
+              <span style={{
+                position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                background: '#F0AC00', color: '#2A1409', borderRadius: '100px',
+                fontSize: '0.7rem', fontWeight: 800, padding: '2px 7px', lineHeight: 1.4,
+              }}>{subNewCount}</span>
+            )}
           </button>
         </nav>
 
@@ -318,6 +391,104 @@ const AdminDashboard: React.FC = () => {
                 )}
               </motion.div>
             )}
+            {activeTab === 'submissions' && (
+              <motion.div key="submissions" className="submissions-pane"
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+              >
+                {/* Toolbar */}
+                <div className="sub-toolbar">
+                  <div className="sub-filters">
+                    {(['all','tuition','careers'] as const).map(f => (
+                      <button key={f} className={`sub-filter-btn ${subFilter === f ? 'active' : ''}`}
+                        onClick={() => setSubFilter(f)}>
+                        {f === 'all' ? 'All' : f === 'tuition' ? 'Tuition' : 'Careers'}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="sub-filters">
+                    {(['all','new','reviewed','contacted','archived'] as const).map(s => (
+                      <button key={s} className={`sub-filter-btn sub-status-btn sub-status-btn--${s} ${subStatusFilter === s ? 'active' : ''}`}
+                        onClick={() => setSubStatusFilter(s)}>
+                        {s.charAt(0).toUpperCase() + s.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                  <button className="sub-refresh-btn" onClick={fetchSubmissions} disabled={subLoading}>
+                    <RefreshCw size={15} className={subLoading ? 'spinning' : ''} /> Refresh
+                  </button>
+                </div>
+
+                {subLoading ? (
+                  <div className="sub-loading">Loading submissions…</div>
+                ) : submissions.length === 0 ? (
+                  <div className="sub-empty">
+                    <Inbox size={40} />
+                    <p>No submissions found</p>
+                  </div>
+                ) : (
+                  <div className="sub-list">
+                    {submissions.map(sub => {
+                      const isOpen = expandedSub === sub.id;
+                      const rd = sub.raw_data ?? {};
+                      return (
+                        <div key={sub.id} className={`sub-card sub-card--${sub.status}`}>
+                          <div className="sub-card-header" onClick={() => setExpandedSub(isOpen ? null : sub.id)}>
+                            <div className="sub-card-type-icon">
+                              {sub.type === 'careers' ? <Briefcase size={16} /> : <GraduationCap size={16} />}
+                            </div>
+                            <div className="sub-card-info">
+                              <span className="sub-card-name">{sub.full_name}</span>
+                              <span className="sub-card-role">{sub.position || (sub.type === 'tuition' ? 'Tuition Application' : 'General Application')}</span>
+                            </div>
+                            <div className="sub-card-meta">
+                              <span className={`sub-status-badge sub-status-badge--${sub.status}`}>{sub.status}</span>
+                              <span className="sub-card-date">{new Date(sub.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })}</span>
+                            </div>
+                            <div className="sub-card-chevron">{isOpen ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}</div>
+                          </div>
+
+                          <AnimatePresence initial={false}>
+                            {isOpen && (
+                              <motion.div className="sub-card-body"
+                                initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                <div className="sub-detail-grid">
+                                  <div className="sub-detail-row"><Mail size={13}/><a href={`mailto:${sub.email}`}>{sub.email}</a></div>
+                                  <div className="sub-detail-row"><Phone size={13}/><span>{sub.phone}</span></div>
+                                  {sub.type === 'tuition' && (rd.grade as string) && (
+                                    <div className="sub-detail-row"><GraduationCap size={13}/><span>Grade {rd.grade as string}</span></div>
+                                  )}
+                                  {sub.type === 'tuition' && (rd.subjects as string) && (
+                                    <div className="sub-detail-row sub-detail-row--full"><strong>Subjects:</strong> {rd.subjects as string}</div>
+                                  )}
+                                  {sub.type === 'careers' && (rd.experience as string) && (
+                                    <div className="sub-detail-row sub-detail-row--full"><strong>Experience:</strong><p>{rd.experience as string}</p></div>
+                                  )}
+                                  {sub.type === 'careers' && (rd.cover_letter as string) && (
+                                    <div className="sub-detail-row sub-detail-row--full"><strong>Cover Letter:</strong><p>{rd.cover_letter as string}</p></div>
+                                  )}
+                                </div>
+                                <div className="sub-actions">
+                                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#666' }}>Mark as:</span>
+                                  {(['new','reviewed','contacted','archived'] as const).map(s => (
+                                    <button key={s} className={`sub-action-btn sub-action-btn--${s} ${sub.status === s ? 'current' : ''}`}
+                                      onClick={() => updateStatus(sub.id, s)}>
+                                      {s === 'contacted' && <CheckCircle size={13}/>}
+                                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                                    </button>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </motion.div>
+            )}
+
           </AnimatePresence>
         </div>
       </main>
@@ -698,6 +869,113 @@ const AdminDashboard: React.FC = () => {
           .admin-sidebar h3, .admin-sidebar p, .sidebar-nav span, .sidebar-nav button { font-size: 0; padding: 15px; }
           .admin-main { margin-left: 80px; }
         }
+
+        /* ── Submissions ── */
+        .submissions-pane { display: flex; flex-direction: column; gap: 20px; }
+
+        .sub-toolbar {
+          display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+          background: #fff; padding: 16px 20px; border-radius: 14px;
+          border: 1px solid #eee;
+        }
+
+        .sub-filters { display: flex; gap: 6px; }
+
+        .sub-filter-btn {
+          padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e5e5e5;
+          background: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+          transition: all 0.2s; color: #57534e;
+        }
+        .sub-filter-btn.active { background: #1C1917; color: #fff; border-color: #1C1917; }
+        .sub-filter-btn:hover:not(.active) { border-color: #1C1917; color: #1C1917; }
+
+        .sub-status-btn--new.active       { background: #3b82f6; border-color: #3b82f6; }
+        .sub-status-btn--reviewed.active  { background: #8b5cf6; border-color: #8b5cf6; }
+        .sub-status-btn--contacted.active { background: #10b981; border-color: #10b981; }
+        .sub-status-btn--archived.active  { background: #9ca3af; border-color: #9ca3af; }
+
+        .sub-refresh-btn {
+          margin-left: auto; display: flex; align-items: center; gap: 6px;
+          padding: 7px 16px; border-radius: 10px; border: 1.5px solid #ddd;
+          background: #fff; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: #57534e;
+        }
+        .sub-refresh-btn:hover { border-color: #1C1917; color: #1C1917; }
+        .sub-refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinning { animation: spin 1s linear infinite; }
+
+        .sub-loading { text-align: center; padding: 60px; color: #9ca3af; font-size: 0.9rem; }
+        .sub-empty { text-align: center; padding: 80px 20px; color: #9ca3af; }
+        .sub-empty svg { margin-bottom: 12px; opacity: 0.4; }
+        .sub-empty p { font-size: 0.95rem; }
+
+        .sub-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .sub-card {
+          background: #fff; border: 1.5px solid #e5e5e5; border-radius: 14px;
+          overflow: hidden; transition: border-color 0.2s;
+        }
+        .sub-card--new     { border-left: 4px solid #3b82f6; }
+        .sub-card--reviewed  { border-left: 4px solid #8b5cf6; }
+        .sub-card--contacted { border-left: 4px solid #10b981; }
+        .sub-card--archived  { border-left: 4px solid #d1d5db; opacity: 0.7; }
+
+        .sub-card-header {
+          display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+          cursor: pointer; user-select: none;
+        }
+        .sub-card-header:hover { background: #f9f9f9; }
+
+        .sub-card-type-icon {
+          width: 34px; height: 34px; border-radius: 10px; background: #f3f4f6;
+          display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #422006;
+        }
+
+        .sub-card-info { flex: 1; min-width: 0; }
+        .sub-card-name { font-weight: 700; font-size: 0.95rem; color: #1C1917; display: block; }
+        .sub-card-role { font-size: 0.8rem; color: #57534e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+
+        .sub-card-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+        .sub-card-date { font-size: 0.76rem; color: #9ca3af; }
+
+        .sub-status-badge {
+          font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 100px;
+          text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .sub-status-badge--new       { background: #dbeafe; color: #1d4ed8; }
+        .sub-status-badge--reviewed  { background: #ede9fe; color: #6d28d9; }
+        .sub-status-badge--contacted { background: #d1fae5; color: #065f46; }
+        .sub-status-badge--archived  { background: #f3f4f6; color: #6b7280; }
+
+        .sub-card-chevron { color: #9ca3af; flex-shrink: 0; }
+
+        .sub-card-body { padding: 0 20px 20px; overflow: hidden; }
+
+        .sub-detail-grid {
+          display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
+          padding: 14px; background: #f9f9f9; border-radius: 10px;
+          font-size: 0.88rem;
+        }
+        .sub-detail-row { display: flex; align-items: flex-start; gap: 8px; color: #57534e; }
+        .sub-detail-row a { color: #422006; text-decoration: underline; }
+        .sub-detail-row--full { flex-direction: column; gap: 4px; }
+        .sub-detail-row--full strong { color: #1C1917; }
+        .sub-detail-row--full p { margin: 0; white-space: pre-wrap; line-height: 1.5; }
+
+        .sub-actions {
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+          padding-top: 12px; border-top: 1px solid #eee;
+        }
+        .sub-action-btn {
+          padding: 5px 14px; border-radius: 8px; border: 1.5px solid #e5e5e5;
+          background: #fff; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+          display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .sub-action-btn.current { opacity: 0.45; cursor: default; }
+        .sub-action-btn--reviewed:hover  { border-color: #8b5cf6; color: #6d28d9; }
+        .sub-action-btn--contacted:hover { border-color: #10b981; color: #065f46; }
+        .sub-action-btn--archived:hover  { border-color: #9ca3af; color: #374151; }
+        .sub-action-btn--new:hover        { border-color: #3b82f6; color: #1d4ed8; }
       `}</style>
     </div>
   );

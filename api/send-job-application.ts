@@ -1,9 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
+import { supabase } from './_supabase';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbu.edu.zm>';
-const TEC_TO  = 'twalumbuaccsdept@gmail.com';
+const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbueducentre.com>';
+const TEC_TO  = 'careers@twalumbueducentre.com';
 
 interface FileAttachment {
   filename: string;
@@ -51,6 +52,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   `;
 
   try {
+    // Save to database
+    await supabase.from('submissions').insert({
+      type: 'careers',
+      full_name,
+      email,
+      phone,
+      position,
+      raw_data: { full_name, email, phone, position, experience, cover_letter },
+    });
+
     await resend.emails.send({
       from: FROM,
       to: TEC_TO,
