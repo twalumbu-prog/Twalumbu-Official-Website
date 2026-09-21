@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check, ChevronRight, ChevronLeft, User, Phone, LayoutGrid, ShieldCheck, MapPin, Smartphone,
@@ -8,10 +7,6 @@ import {
 } from 'lucide-react';
 import SEO from '../components/common/SEO';
 
-const EMAILJS_PUBLIC_KEY    = import.meta.env.VITE_EMAILJS_PUBLIC_KEY    as string;
-const EMAILJS_SERVICE_ID    = import.meta.env.VITE_EMAILJS_SERVICE_ID    as string;
-const EMAILJS_TMPL_INBOUND  = import.meta.env.VITE_EMAILJS_TEMPLATE_INBOUND  as string;
-const EMAILJS_TMPL_CONFIRM  = import.meta.env.VITE_EMAILJS_TEMPLATE_CONFIRM  as string;
 
 const steps = [
   { id: 1, title: "Learner's Details", icon: <User size={20} /> },
@@ -154,26 +149,18 @@ const TuitionApplyPage: React.FC = () => {
     };
 
     try {
-      // Send application to TEC inbox
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TMPL_INBOUND,
-        { ...sharedParams, to_email: 'twalumbuaccsdept@gmail.com' },
-        { publicKey: EMAILJS_PUBLIC_KEY },
-      );
+      const res = await fetch('/api/send-application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sharedParams),
+      });
 
-      // Send confirmation copy to the applicant
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TMPL_CONFIRM,
-        { ...sharedParams, to_email: formData.email },
-        { publicKey: EMAILJS_PUBLIC_KEY },
-      );
+      if (!res.ok) throw new Error('Server error');
 
       setIsSubmitting(false);
       setIsSuccess(true);
     } catch (err) {
-      console.error('EmailJS error:', err);
+      console.error('Submit error:', err);
       setError('Something went wrong sending your application. Please email us directly at twalumbuaccsdept@gmail.com.');
       setIsSubmitting(false);
     }
