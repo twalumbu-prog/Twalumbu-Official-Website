@@ -5,10 +5,23 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbu.edu.zm>';
 const TEC_TO  = 'twalumbuaccsdept@gmail.com';
 
+interface FileAttachment {
+  filename: string;
+  content: string; // base64
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { full_name, email, phone, position, experience, cover_letter } = req.body;
+  const { full_name, email, phone, position, experience, cover_letter, cv, qualifications } = req.body as {
+    full_name: string; email: string; phone: string; position: string;
+    experience: string; cover_letter: string;
+    cv?: FileAttachment; qualifications?: FileAttachment[];
+  };
+
+  const attachments: { filename: string; content: Buffer }[] = [];
+  if (cv) attachments.push({ filename: cv.filename, content: Buffer.from(cv.content, 'base64') });
+  (qualifications ?? []).forEach(q => attachments.push({ filename: q.filename, content: Buffer.from(q.content, 'base64') }));
 
   const applicationHtml = `
     <h2>New Job Application</h2>
@@ -44,6 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       replyTo: email,
       subject: `Job Application — ${position} (${full_name})`,
       html: applicationHtml,
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
 
     await resend.emails.send({

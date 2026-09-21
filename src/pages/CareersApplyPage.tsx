@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Briefcase, FileText, ShieldCheck, Check, ChevronRight, ChevronLeft } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, FileText, ShieldCheck, Check, ChevronRight, ChevronLeft, Upload, X, Paperclip, Plus } from 'lucide-react';
 import SEO from '../components/common/SEO';
+
+interface AttachedFile {
+  file: File;
+  id: string;
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader.result as string).split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 const steps = [
   { id: 1, title: 'Personal Details', icon: <User size={20} /> },
@@ -26,6 +40,11 @@ const CareersApplyPage: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [qualFiles, setQualFiles] = useState<AttachedFile[]>([]);
+  const cvInputRef = useRef<HTMLInputElement>(null);
+  const qualInputRef = useRef<HTMLInputElement>(null);
+
   const [form, setForm] = useState({
     full_name: '',
     email: '',
@@ -43,15 +62,41 @@ const CareersApplyPage: React.FC = () => {
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, steps.length));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
+  const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setCvFile(file);
+    e.target.value = '';
+  };
+
+  const handleQualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const newEntries: AttachedFile[] = files.map(f => ({ file: f, id: `${f.name}-${Date.now()}-${Math.random()}` }));
+    setQualFiles(prev => [...prev, ...newEntries]);
+    e.target.value = '';
+  };
+
+  const removeQual = (id: string) => setQualFiles(prev => prev.filter(q => q.id !== id));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
     try {
+      const cv = cvFile
+        ? { filename: cvFile.name, content: await fileToBase64(cvFile) }
+        : null;
+
+      const qualifications = await Promise.all(
+        qualFiles.map(async ({ file }) => ({
+          filename: file.name,
+          content: await fileToBase64(file),
+        }))
+      );
+
       const res = await fetch('/api/send-job-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, cv, qualifications }),
       });
       if (!res.ok) throw new Error('Server error');
       setIsSuccess(true);
@@ -161,6 +206,47 @@ const CareersApplyPage: React.FC = () => {
                         <div className="cap-field">
                           <label><FileText size={13} /> Why do you want to join Twalumbu? *</label>
                           <textarea name="cover_letter" value={form.cover_letter} onChange={handleInput} required rows={5} placeholder="Tell us what draws you to TEC and what you would bring to the role…" />
+                        </div>
+
+                        {/* CV Upload */}
+                        <div className="cap-field">
+                          <label><Paperclip size={13} /> Curriculum Vitae (CV)</label>
+                          <input ref={cvInputRef} type="file" accept=".pdf,.doc,.docx" style={{ display: 'none' }} onChange={handleCvChange} />
+                          {cvFile ? (
+                            <div className="cap-file-item">
+                              <Paperclip size={14} />
+                              <span className="cap-file-name">{cvFile.name}</span>
+                              <span className="cap-file-size">({(cvFile.size / 1024).toFixed(0)} KB)</span>
+                              <button type="button" className="cap-file-remove" onClick={() => setCvFile(null)}><X size={14} /></button>
+                            </div>
+                          ) : (
+                            <button type="button" className="cap-upload-btn" onClick={() => cvInputRef.current?.click()}>
+                              <Upload size={15} /> Upload CV
+                            </button>
+                          )}
+                          <span className="cap-file-hint">PDF, DOC or DOCX — max 10 MB</span>
+                        </div>
+
+                        {/* Qualifications Upload */}
+                        <div className="cap-field">
+                          <label><Paperclip size={13} /> Qualification Documents</label>
+                          <input ref={qualInputRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple style={{ display: 'none' }} onChange={handleQualChange} />
+                          {qualFiles.length > 0 && (
+                            <div className="cap-file-list">
+                              {qualFiles.map(({ file, id }) => (
+                                <div key={id} className="cap-file-item">
+                                  <Paperclip size={14} />
+                                  <span className="cap-file-name">{file.name}</span>
+                                  <span className="cap-file-size">({(file.size / 1024).toFixed(0)} KB)</span>
+                                  <button type="button" className="cap-file-remove" onClick={() => removeQual(id)}><X size={14} /></button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <button type="button" className="cap-upload-btn" onClick={() => qualInputRef.current?.click()}>
+                            <Plus size={15} /> {qualFiles.length === 0 ? 'Upload Qualification Document' : 'Add Another Qualification'}
+                          </button>
+                          <span className="cap-file-hint">PDF, DOC, DOCX or image — max 10 MB each</span>
                         </div>
                       </div>
                     )}
@@ -449,6 +535,86 @@ const CareersApplyPage: React.FC = () => {
           margin: 0 auto;
           line-height: 1.6;
         }
+
+        /* Upload */
+        .cap-upload-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 11px 20px;
+          background: #f8f9fa;
+          color: #422006;
+          border: 1.5px dashed #c9b99a;
+          border-radius: 10px;
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: 0.88rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          width: 100%;
+          justify-content: center;
+        }
+
+        .cap-upload-btn:hover {
+          background: #f0ebe3;
+          border-color: #9F691F;
+          color: #9F691F;
+        }
+
+        .cap-file-hint {
+          font-size: 0.76rem;
+          color: #a8a29e;
+          margin-top: 4px;
+        }
+
+        .cap-file-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+
+        .cap-file-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 14px;
+          background: #f0ebe3;
+          border: 1px solid #ddd4c4;
+          border-radius: 10px;
+          margin-bottom: 8px;
+          color: #422006;
+        }
+
+        .cap-file-name {
+          flex: 1;
+          font-size: 0.88rem;
+          font-weight: 500;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .cap-file-size {
+          font-size: 0.78rem;
+          color: #a8a29e;
+          flex-shrink: 0;
+        }
+
+        .cap-file-remove {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #9a3412;
+          padding: 2px;
+          display: flex;
+          align-items: center;
+          border-radius: 4px;
+          flex-shrink: 0;
+          transition: background 0.15s;
+        }
+
+        .cap-file-remove:hover { background: rgba(154,52,18,0.1); }
 
         @media (max-width: 768px) {
           .cap-header h1 { font-size: 1.9rem; }
