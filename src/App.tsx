@@ -10,6 +10,7 @@ const EnrolPage = lazy(() => import('./pages/EnrolPage'));
 const TuitionPage = lazy(() => import('./pages/TuitionPage'));
 const TuitionApplyPage = lazy(() => import('./pages/TuitionApplyPage'));
 const CareersPage = lazy(() => import('./pages/CareersPage'));
+const CareersApplyPage = lazy(() => import('./pages/CareersApplyPage'));
 const AdminLogin = lazy(() => import('./pages/Admin/Login'));
 const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/tuition" element={<TuitionPage />} />
           <Route path="/tuition/apply" element={<TuitionApplyPage />} />
           <Route path="/careers" element={<CareersPage />} />
+          <Route path="/careers/apply" element={<CareersApplyPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
