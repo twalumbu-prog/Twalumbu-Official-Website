@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
-import { supabase } from './_supabase';
+import { createClient } from '@supabase/supabase-js';
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbueducentre.com>';
