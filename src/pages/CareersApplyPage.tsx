@@ -154,6 +154,9 @@ const CareersApplyPage: React.FC = () => {
                     <div className="cap-success-icon">✓</div>
                     <h2>Application Sent!</h2>
                     <p>Thank you for applying to Twalumbu Education Centre. We'll review your application and reach out if your profile is a strong match.</p>
+                    <p style={{ marginTop: '12px', fontSize: '0.9rem', color: '#57534e' }}>
+                      A confirmation copy has been sent to <strong>{form.email}</strong>. If you don't see it, please check your spam folder.
+                    </p>
                     <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '24px', flexWrap: 'wrap' }}>
                       <button type="button" className="cap-btn-primary" onClick={() => navigate('/careers')}>
                         Back to Careers
