@@ -161,7 +161,7 @@ const TuitionApplyPage: React.FC = () => {
       setIsSuccess(true);
     } catch (err) {
       console.error('Submit error:', err);
-      setError('Something went wrong sending your application. Please email us directly at twalumbuaccsdept@gmail.com.');
+      setError('Something went wrong sending your application. Please email us directly at tuitionsales@twalumbueducentre.com.');
       setIsSubmitting(false);
     }
   };
@@ -218,9 +218,10 @@ const TuitionApplyPage: React.FC = () => {
                     <div className="success-lottie">✓</div>
                     <h2>Application Sent!</h2>
                     <p>
-                      Your application for <strong>{formData.firstName} {formData.lastName}</strong> has been submitted.
-                      Your email client has opened with the pre-filled application — please send it if it hasn't been sent automatically.
-                      We'll be in touch within 24–48 hours.
+                      Thank you, <strong>{formData.firstName} {formData.lastName}</strong>. Your application for the Twalumbu Extra Lessons programme has been received and we'll be in touch within 24–48 hours to confirm your place.
+                    </p>
+                    <p style={{ marginTop: '12px', fontSize: '0.9rem', color: '#57534e' }}>
+                      A confirmation copy has been sent to <strong>{formData.email}</strong>. If you don't see it, please check your spam folder.
                     </p>
                     <button className="btn-primary" onClick={() => window.location.href = '/tuition'} style={{ marginTop: '24px' }}>
                       Back to Tuition Centre
