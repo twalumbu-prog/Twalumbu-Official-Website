@@ -1,48 +1,107 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, ChevronDown, ChevronUp, ArrowRight, Check } from 'lucide-react';
+import { Briefcase, ChevronDown, ChevronUp, ArrowRight, Check, Download } from 'lucide-react';
 import SEO from '../components/common/SEO';
 
 const openings = [
   {
-    id: 'tutor-math-science',
-    title: 'Mathematics & Science Tutor',
-    type: 'Part-Time',
-    location: 'Chongwe District (In-Person)',
-    summary: 'Deliver structured extra lessons in Mathematics, Physics, Chemistry and/or Biology to Grade 8–12 learners. ECZ syllabus-mapped sessions in small class groups.',
-    requirements: [
-      'Degree or diploma in a relevant STEM field',
-      'Strong knowledge of the Zambia ECZ syllabus',
-      'Proven experience tutoring or teaching at secondary level',
-      'Patient, organised, and committed to learner outcomes',
-    ],
-  },
-  {
-    id: 'tutor-humanities',
-    title: 'Humanities & Languages Tutor',
-    type: 'Part-Time',
-    location: 'Chongwe District (In-Person)',
-    summary: 'Deliver extra lessons in English Language, History, Geography, Civic Education and/or Social Studies to Grade 8–12 learners.',
-    requirements: [
-      'Degree or diploma in Education, Arts or Social Sciences',
-      'Familiarity with ECZ examination requirements',
-      'Excellent written and spoken English',
-      'Reliable, punctual and learner-centred approach',
-    ],
-  },
-  {
-    id: 'admin-coordinator',
+    id: 'coordinator',
     title: 'Programme Coordinator',
     type: 'Full-Time',
-    location: 'Chongwe District',
-    summary: 'Manage day-to-day operations of the Extra Lessons SBU — scheduling, learner records, tutor liaison and communication with families.',
-    requirements: [
-      'Diploma or degree in Business Administration or Education Management',
-      'Strong organisational and communication skills',
-      'Proficient with computers and basic office software',
-      'Prior experience in a school or training environment is an advantage',
+    location: 'Chongwe, Lusaka Province',
+    summary: 'The Programme Coordinator is the operational lead of the Extra Lessons SBU — responsible for day-to-day running of the programme, teacher supervision, student admissions, academic performance monitoring, parent relations and reporting to management. This is a hands-on leadership role that combines coordination, administration and a genuine commitment to student outcomes.',
+    responsibilities: [
+      'Run daily programme operations: timetabling, room allocation, class management and issue resolution',
+      'Supervise teachers — schedules, attendance, lesson quality and performance',
+      'Manage admissions: respond to enquiries, process registrations, track enrolment',
+      'Monitor student attendance, academic progress and retention; coordinate interventions',
+      'Implement marketing activities and represent the programme at events and open days',
+      'Maintain accurate student, teacher and programme records',
+      'Prepare regular performance and enrolment reports for management',
     ],
+    requirements: [
+      'Diploma or degree in Education, Business Administration, Management or a related field',
+      'Experience in education, programme coordination, school administration or a related environment',
+      'Strong organisational, administrative and communication skills',
+      'Good computer literacy — MS Office / Google Workspace, spreadsheets and digital platforms',
+      'Experience supervising staff and managing customer or parent relationships is an advantage',
+      'Knowledge of the Zambian education system is an advantage',
+    ],
+    jdFile: '/downloads/TEC_Job_Description_Programme_Coordinator.docx',
+    jdLabel: 'Full Job Description — Programme Coordinator',
+  },
+  {
+    id: 'teacher-maths',
+    title: 'Mathematics Teacher',
+    type: 'Part-Time',
+    location: 'Twalumbu Education Centre, Chongwe',
+    summary: 'Deliver high-quality, examination-focused Mathematics lessons to Grade 9 and Grade 12 learners (including GCE candidates) in the Extra Lessons Programme. The role involves lesson preparation, teaching, assessment, feedback and contributing to the programme\'s digital and recorded learning resources.',
+    responsibilities: [
+      'Plan and deliver structured lessons aligned with the ECZ Mathematics syllabus',
+      'Prepare students for Grade 9 and Grade 12 examinations using past papers and exam technique',
+      'Create learning resources: slides, notes, worksheets, practice questions and mock tests',
+      'Assess student understanding regularly; provide clear, constructive feedback',
+      'Deliver lessons effectively for both in-person and online/recorded learning',
+      'Report academic concerns to the Programme Coordinator and contribute to student improvement plans',
+    ],
+    requirements: [
+      'Teaching qualification, degree or diploma in Mathematics or a related field',
+      'Strong subject knowledge and the ability to teach at secondary level effectively',
+      'Experience preparing students for ECZ Grade 9 or Grade 12 examinations is an advantage',
+      'Good communication skills and computer literacy; ability to create digital teaching resources',
+      'Professional, reliable, punctual and committed to measurable student improvement',
+    ],
+    jdFile: '/downloads/TEC_Job_Description_Teacher.docx',
+    jdLabel: 'Full Job Description — Part-Time Teacher',
+  },
+  {
+    id: 'teacher-english',
+    title: 'English Language Teacher',
+    type: 'Part-Time',
+    location: 'Twalumbu Education Centre, Chongwe',
+    summary: 'Deliver high-quality, examination-focused English Language lessons to Grade 9 and Grade 12 learners in the Extra Lessons Programme. The role covers lesson preparation, teaching, assessment, feedback and contributing to the programme\'s learning resources.',
+    responsibilities: [
+      'Plan and deliver structured lessons aligned with the ECZ English Language syllabus',
+      'Prepare students for Grade 9 and Grade 12 examinations: comprehension, composition, grammar and exam technique',
+      'Create learning resources: lesson notes, practice exercises, past paper reviews and revision materials',
+      'Assess student work regularly; provide specific, actionable written and verbal feedback',
+      'Deliver lessons effectively for both in-person and online/recorded learning',
+      'Identify and address individual reading, writing and comprehension gaps',
+    ],
+    requirements: [
+      'Teaching qualification, degree or diploma in English, Education or a related field',
+      'Excellent written and spoken English; strong command of grammar, composition and literature',
+      'Experience preparing students for ECZ examinations at Grade 9 or Grade 12 level is an advantage',
+      'Good computer literacy and the ability to create digital teaching resources',
+      'Professional, reliable, punctual and committed to measurable student improvement',
+    ],
+    jdFile: '/downloads/TEC_Job_Description_Teacher.docx',
+    jdLabel: 'Full Job Description — Part-Time Teacher',
+  },
+  {
+    id: 'teacher-science',
+    title: 'Science Teacher (Physics · Biology · Chemistry)',
+    type: 'Part-Time',
+    location: 'Twalumbu Education Centre, Chongwe',
+    summary: 'Deliver high-quality, examination-focused lessons in one or more of Physics, Biology and Chemistry to Grade 9 and Grade 12 learners. We are open to candidates who specialise in one science subject or who can cover multiple. Subject allocation will be confirmed based on the successful candidate\'s strengths.',
+    responsibilities: [
+      'Plan and deliver structured science lessons aligned with the relevant ECZ syllabus',
+      'Prepare students for Grade 9 and Grade 12 examinations using past papers, practicals and exam technique',
+      'Create learning resources: slides, notes, diagrams, practice questions, mock tests',
+      'Assess student understanding regularly and provide clear, targeted feedback',
+      'Deliver lessons effectively for both in-person and online/recorded learning',
+      'Identify misconceptions early and adapt teaching to close knowledge gaps',
+    ],
+    requirements: [
+      'Teaching qualification, degree or diploma in a Science subject (Physics, Biology, Chemistry or combined)',
+      'Strong subject knowledge; ability to teach at secondary level clearly and practically',
+      'Experience preparing students for ECZ examinations at Grade 9 or Grade 12 level is an advantage',
+      'Good computer literacy and the ability to create digital teaching resources',
+      'Professional, reliable, punctual and results-driven',
+    ],
+    jdFile: '/downloads/TEC_Job_Description_Teacher.docx',
+    jdLabel: 'Full Job Description — Part-Time Teacher',
   },
 ];
 
@@ -154,17 +213,30 @@ const CareersPage: React.FC = () => {
                           transition={{ duration: 0.25 }}
                         >
                           <p className="opening-summary">{job.summary}</p>
+                          <p className="opening-req-label">Key responsibilities:</p>
+                          <ul className="opening-req-list">
+                            {job.responsibilities.map(r => <li key={r}>{r}</li>)}
+                          </ul>
                           <p className="opening-req-label">What we're looking for:</p>
                           <ul className="opening-req-list">
                             {job.requirements.map(r => <li key={r}>{r}</li>)}
                           </ul>
-                          <button
-                            type="button"
-                            className="opening-apply-btn"
-                            onClick={() => handleApply(job.title)}
-                          >
-                            Apply for this role <ArrowRight size={15} />
-                          </button>
+                          <div className="opening-actions">
+                            <button
+                              type="button"
+                              className="opening-apply-btn"
+                              onClick={() => handleApply(job.title)}
+                            >
+                              Apply for this role <ArrowRight size={15} />
+                            </button>
+                            <a
+                              href={job.jdFile}
+                              download
+                              className="opening-download-btn"
+                            >
+                              <Download size={15} /> Download full JD
+                            </a>
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -429,6 +501,13 @@ const CareersPage: React.FC = () => {
           line-height: 1.5;
         }
 
+        .opening-actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
         .opening-apply-btn {
           display: inline-flex;
           align-items: center;
@@ -443,9 +522,33 @@ const CareersPage: React.FC = () => {
           font-weight: 600;
           cursor: pointer;
           transition: background 0.2s;
+          text-decoration: none;
         }
 
         .opening-apply-btn:hover { background: #2A1409; }
+
+        .opening-download-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 12px 20px;
+          background: transparent;
+          color: #422006;
+          border: 1.5px solid #d4b078;
+          border-radius: 10px;
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: 0.88rem;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+
+        .opening-download-btn:hover {
+          background: #fdf8f0;
+          border-color: #9F691F;
+          color: #9F691F;
+        }
 
         .openings-general-cta {
           max-width: 860px;
