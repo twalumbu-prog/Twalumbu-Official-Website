@@ -15,14 +15,15 @@ interface FileAttachment {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { full_name, email, phone, position, experience, cover_letter, cv, qualifications } = req.body as {
+  const { full_name, email, phone, position, experience, cover_letter, cv, id_document, qualifications } = req.body as {
     full_name: string; email: string; phone: string; position: string;
     experience: string; cover_letter: string;
-    cv?: FileAttachment; qualifications?: FileAttachment[];
+    cv?: FileAttachment; id_document?: FileAttachment; qualifications?: FileAttachment[];
   };
 
   const attachments: { filename: string; content: Buffer }[] = [];
   if (cv) attachments.push({ filename: cv.filename, content: Buffer.from(cv.content, 'base64') });
+  if (id_document) attachments.push({ filename: id_document.filename, content: Buffer.from(id_document.content, 'base64') });
   (qualifications ?? []).forEach(q => attachments.push({ filename: q.filename, content: Buffer.from(q.content, 'base64') }));
 
   const applicationHtml = `

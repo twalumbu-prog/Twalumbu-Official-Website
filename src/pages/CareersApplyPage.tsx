@@ -41,8 +41,10 @@ const CareersApplyPage: React.FC = () => {
   const [error, setError] = useState('');
 
   const [cvFile, setCvFile] = useState<File | null>(null);
+  const [idFile, setIdFile] = useState<File | null>(null);
   const [qualFiles, setQualFiles] = useState<AttachedFile[]>([]);
   const cvInputRef = useRef<HTMLInputElement>(null);
+  const idInputRef = useRef<HTMLInputElement>(null);
   const qualInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -68,6 +70,12 @@ const CareersApplyPage: React.FC = () => {
     e.target.value = '';
   };
 
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setIdFile(file);
+    e.target.value = '';
+  };
+
   const handleQualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     const newEntries: AttachedFile[] = files.map(f => ({ file: f, id: `${f.name}-${Date.now()}-${Math.random()}` }));
@@ -86,6 +94,10 @@ const CareersApplyPage: React.FC = () => {
         ? { filename: cvFile.name, content: await fileToBase64(cvFile) }
         : null;
 
+      const id_document = idFile
+        ? { filename: idFile.name, content: await fileToBase64(idFile) }
+        : null;
+
       const qualifications = await Promise.all(
         qualFiles.map(async ({ file }) => ({
           filename: file.name,
@@ -96,7 +108,7 @@ const CareersApplyPage: React.FC = () => {
       const res = await fetch('/api/send-job-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, cv, qualifications }),
+        body: JSON.stringify({ ...form, cv, id_document, qualifications }),
       });
       if (!res.ok) throw new Error('Server error');
       setIsSuccess(true);
@@ -228,6 +240,25 @@ const CareersApplyPage: React.FC = () => {
                             </button>
                           )}
                           <span className="cap-file-hint">PDF, DOC or DOCX — max 10 MB</span>
+                        </div>
+
+                        {/* NRC / Passport Upload */}
+                        <div className="cap-field">
+                          <label><Paperclip size={13} /> NRC or Passport *</label>
+                          <input ref={idInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={handleIdChange} />
+                          {idFile ? (
+                            <div className="cap-file-item">
+                              <Paperclip size={14} />
+                              <span className="cap-file-name">{idFile.name}</span>
+                              <span className="cap-file-size">({(idFile.size / 1024).toFixed(0)} KB)</span>
+                              <button type="button" className="cap-file-remove" onClick={() => setIdFile(null)}><X size={14} /></button>
+                            </div>
+                          ) : (
+                            <button type="button" className="cap-upload-btn" onClick={() => idInputRef.current?.click()}>
+                              <Upload size={15} /> Upload NRC or Passport
+                            </button>
+                          )}
+                          <span className="cap-file-hint">PDF or image (JPG, PNG) — max 10 MB</span>
                         </div>
 
                         {/* Qualifications Upload */}
