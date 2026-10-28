@@ -18,6 +18,32 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+// Compress images via canvas before encoding. Non-images are returned unchanged.
+function compressFile(file: File, maxPx = 1600, quality = 0.82): Promise<File> {
+  if (!file.type.startsWith('image/')) return Promise.resolve(file);
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => {
+        if (!blob) { resolve(file); return; }
+        // Keep original filename but mark as jpeg
+        const ext = file.type === 'image/png' ? '.png' : '.jpg';
+        const name = file.name.replace(/\.[^.]+$/, ext);
+        resolve(new File([blob], name, { type: blob.type }));
+      }, file.type === 'image/png' ? 'image/png' : 'image/jpeg', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+    img.src = url;
+  });
+}
+
 const steps = [
   { id: 1, title: 'Personal Details', icon: <User size={20} /> },
   { id: 2, title: 'Your Application', icon: <FileText size={20} /> },
@@ -104,16 +130,20 @@ const CareersApplyPage: React.FC = () => {
     setIsSubmitting(true);
     setError('');
     try {
-      const cv = cvFile
-        ? { filename: cvFile.name, content: await fileToBase64(cvFile) }
+      const cvReady   = cvFile ? await compressFile(cvFile) : null;
+      const idReady   = idFile ? await compressFile(idFile) : null;
+      const qualReady = await Promise.all(qualFiles.map(({ file }) => compressFile(file)));
+
+      const cv = cvReady
+        ? { filename: cvReady.name, content: await fileToBase64(cvReady) }
         : null;
 
-      const id_document = idFile
-        ? { filename: idFile.name, content: await fileToBase64(idFile) }
+      const id_document = idReady
+        ? { filename: idReady.name, content: await fileToBase64(idReady) }
         : null;
 
       const qualifications = await Promise.all(
-        qualFiles.map(async ({ file }) => ({
+        qualReady.map(async (file) => ({
           filename: file.name,
           content: await fileToBase64(file),
         }))
