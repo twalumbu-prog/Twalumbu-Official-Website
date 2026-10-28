@@ -64,22 +64,36 @@ const CareersApplyPage: React.FC = () => {
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, steps.length));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
+  const MAX_FILE_MB = 10;
+  const MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024;
+
   const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setCvFile(file);
+    if (file) {
+      if (file.size > MAX_FILE_BYTES) { setError(`CV is too large (max ${MAX_FILE_MB} MB).`); } else { setCvFile(file); setError(''); }
+    }
     e.target.value = '';
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setIdFile(file);
+    if (file) {
+      if (file.size > MAX_FILE_BYTES) { setError(`ID document is too large (max ${MAX_FILE_MB} MB).`); } else { setIdFile(file); setError(''); }
+    }
     e.target.value = '';
   };
 
   const handleQualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    const oversized = files.filter(f => f.size > MAX_FILE_BYTES);
+    if (oversized.length > 0) {
+      setError(`Some files are too large (max ${MAX_FILE_MB} MB each): ${oversized.map(f => f.name).join(', ')}`);
+      e.target.value = '';
+      return;
+    }
     const newEntries: AttachedFile[] = files.map(f => ({ file: f, id: `${f.name}-${Date.now()}-${Math.random()}` }));
     setQualFiles(prev => [...prev, ...newEntries]);
+    setError('');
     e.target.value = '';
   };
 
@@ -114,7 +128,7 @@ const CareersApplyPage: React.FC = () => {
       setIsSuccess(true);
     } catch (err) {
       console.error(err);
-      setError('Something went wrong. Please email us directly at twalumbuaccsdept@gmail.com.');
+      setError('Something went wrong submitting your application. Please try again, or email us directly at careers@twalumbueducentre.com.');
     } finally {
       setIsSubmitting(false);
     }

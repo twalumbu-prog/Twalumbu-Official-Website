@@ -7,6 +7,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Twalumbu Education Centre <noreply@twalumbueducentre.com>';
 const TEC_TO  = 'careers@twalumbueducentre.com';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '20mb',
+    },
+  },
+};
+
 interface FileAttachment {
   filename: string;
   content: string; // base64
@@ -81,8 +89,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error('Resend error:', err);
-    return res.status(500).json({ error: 'Failed to send email' });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('send-job-application error:', message);
+    return res.status(500).json({ error: message || 'Failed to send application' });
   }
 }
